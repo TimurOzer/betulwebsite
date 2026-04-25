@@ -5,58 +5,58 @@ var SITE_CONTENT = {
 
   "home": {
     "hero": {
-      "subtitle": "through my big lens",
-      "copy": "Betül emotions and turn fleeting <strong>moments—weddings, family bonds, or shared laughter</strong> into lasting memories.",
-      "clientsLabel": " he he clients worldwide",
+      "subtitle": "crafting visual narratives",
+      "copy": "I blend strategy with aesthetics to turn <strong>ideas into compelling digital experiences, dynamic videos, and intuitive interfaces.</strong>",
+      "clientsLabel": " creative projects everywhere",
       "card": {
-        "title": "Professional creative<br />photography",
+        "title": "Multidisciplinary<br />Digital Design",
         "year": "© 2026",
-        "button": "Let's chat"
+        "button": "Let's collaborate"
       },
-      "ratingScore": "4.9/5",
-      "trust": "Trusted by <strong>100+ businesses</strong>"
+      "ratingScore": "Pixel Perfect",
+      "trust": "Mastering <strong>Adobe CC, Figma & FCPX</strong>"
     },
     "quote": {
       "authorName": "Betül Alkan",
-      "authorRole": "Professional photographer",
-      "text": "I don't just take photos Betül raw emotions, subtle moments, and untold stories that make life beautiful."
+      "authorRole": "Multidisciplinary Designer & Editor",
+      "text": "I don't just push pixels. I build bridges between ideas and audiences through thoughtful communication, sharp editing, and innovative design."
     }
   },
 
   "about": {
     "label": "— 01 / About Me",
-    "title": "Behind<br />the lens.",
-    "bio1": "I'm a professional photographer based in Istanbul, specializing in capturing authentic human moments. With over a decade of experience, I've worked with brands, families, and artists across the world.",
-    "bio2": "My approach is simple: patience, presence, and a deep respect for the story unfolding in front of me.",
+    "title": "Behind<br />the screens.",
+    "bio1": "I'm a Communication and Design junior at Istanbul Gelişim University, driven by an endless curiosity for digital storytelling. My playground ranges from brand identities and user interfaces to full-scale video production.",
+    "bio2": "With complete fluency in the Adobe Creative Suite, Figma, and Final Cut Pro, my approach is versatile: combining technical precision with bold, out-of-the-box thinking to bring ambitious visions to life.",
     "stats": [
-      { "num": "10+",  "label": "Years of experience" },
-      { "num": "500+", "label": "Projects completed"  },
-      { "num": "30+",  "label": "Countries visited"   }
+      { "num": "3rd",   "label": "Year Uni Student" },
+      { "num": "10+",   "label": "Creative Tools Mastered" },
+      { "num": "100%",  "label": "Creative Energy" }
     ]
   },
 
   "work": {
     "label": "— 02 / Work",
-    "title": "Selected<br />projects.",
+    "title": "Selected<br />creations.",
     "dragHint": "drag to explore"
   },
 
   "contact": {
     "label": "— 03 / Contact",
-    "title": "Let's create something<br /><em>unforgettable.</em>",
-    "sub": "Available for commissions, collaborations, and editorial projects worldwide.",
+    "title": "Let's build something<br /><em>extraordinary.</em>",
+    "sub": "Always open to freelance projects, creative collaborations, and exciting opportunities.",
     "links": [
       { "text": "betulalkan98@gmail.com", "href": "mailto:betulalkan98@gmail.com" },
       { "text": "Instagram",             "href": "#" },
       { "text": "Behance",               "href": "#" }
     ],
-    "footerCopyright": "© 2025 Betül®",
-    "footerLocation": "Istanbul, Turkey",
+    "footerCopyright": "© 2026 Betül®",
+    "footerLocation": "Istanbul, Türkiye",
     "form": {
       "fields": [
         { "label": "Your name", "type": "text",     "placeholder": "Your Name"              },
         { "label": "Email",     "type": "email",    "placeholder": "hello@example.com"      },
-        { "label": "Message",   "type": "textarea", "placeholder": "Tell me about your project…", "rows": 4 }
+        { "label": "Message",   "type": "textarea", "placeholder": "Tell me about your creative idea…", "rows": 4 }
       ],
       "submit": "Send message →"
     }

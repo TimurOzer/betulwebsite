@@ -275,7 +275,84 @@
     wrap.addEventListener('touchend', () => { if (isDragging) onDragEnd(); }, { passive: true });
   }
 
+  loadContent();
   initBelt();
+
+/* ── Content loader ────────────────── */
+async function loadContent() {
+  const c = window.SITE_CONTENT;
+  if (!c) { console.warn('SITE_CONTENT bulunamadı.'); return; }
+
+  const set = (sel, html, prop = 'innerHTML') => {
+    const el = document.querySelector(sel);
+    if (el) el[prop] = html;
+  };
+
+  // Nav
+  set('.nav__logo', c.nav.logo + '<sup>®</sup>');
+
+  // Hero
+  set('.hero__subtitle', c.home.hero.subtitle, 'textContent');
+  const heroCopyP = document.querySelector('.hero__copy p');
+  if (heroCopyP) heroCopyP.innerHTML = c.home.hero.copy;
+  set('.hero__clients-label', c.home.hero.clientsLabel, 'textContent');
+  set('.hero__card-title',    c.home.hero.card.title);
+  set('.hero__card-year',     c.home.hero.card.year, 'textContent');
+  set('.hero__card-btn',      c.home.hero.card.button, 'textContent');
+  set('.rating-score',        c.home.hero.ratingScore, 'textContent');
+  set('.hero__trust',         c.home.hero.trust);
+
+  // Quote
+  set('.quote-author__name', c.home.quote.authorName, 'textContent');
+  set('.quote-author__role', c.home.quote.authorRole, 'textContent');
+  const quoteEl = document.querySelector('.quote-text');
+  if (quoteEl) quoteEl.innerHTML =
+    `<span class="quote-mark">"</span>${c.home.quote.text}<span class="quote-mark">"</span>`;
+
+  // About
+  set('[data-panel="1"] .section-label', c.about.label, 'textContent');
+  set('.about__title', c.about.title);
+  const bios = document.querySelectorAll('.about__bio');
+  if (bios[0]) bios[0].textContent = c.about.bio1;
+  if (bios[1]) bios[1].textContent = c.about.bio2;
+  document.querySelectorAll('.about__stat').forEach((el, i) => {
+    if (!c.about.stats[i]) return;
+    el.querySelector('.about__stat-num').textContent   = c.about.stats[i].num;
+    el.querySelector('.about__stat-label').textContent = c.about.stats[i].label;
+  });
+
+  // Work
+  set('[data-panel="2"] .section-label', c.work.label, 'textContent');
+  set('.work__title', c.work.title);
+  const dragSpan = document.querySelector('.work__drag-hint span');
+  if (dragSpan) dragSpan.textContent = c.work.dragHint;
+
+  // Contact
+  set('[data-panel="3"] .section-label', c.contact.label, 'textContent');
+  set('.contact__title', c.contact.title);
+  set('.contact__sub',   c.contact.sub, 'textContent');
+  document.querySelectorAll('.contact__link').forEach((el, i) => {
+    if (!c.contact.links[i]) return;
+    el.textContent = c.contact.links[i].text;
+    el.href        = c.contact.links[i].href;
+  });
+  const footerSpans = document.querySelectorAll('.contact__footer span');
+  if (footerSpans[0]) footerSpans[0].textContent = c.contact.footerCopyright;
+  if (footerSpans[1]) footerSpans[1].textContent = c.contact.footerLocation;
+
+  // Contact form
+  document.querySelectorAll('.form-group').forEach((el, i) => {
+    const f = c.contact.form.fields[i];
+    if (!f) return;
+    const label = el.querySelector('label');
+    if (label) label.textContent = f.label;
+    const field = f.type === 'textarea'
+      ? el.querySelector('textarea')
+      : el.querySelector('input');
+    if (field) field.placeholder = f.placeholder;
+  });
+  set('.contact__submit', c.contact.form.submit, 'textContent');
+}
 
   /* ── Custom cursor ─────────────────── */
   if (window.matchMedia('(hover: hover)').matches) {

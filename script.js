@@ -12,6 +12,36 @@
   let isAnimating = false;
   let currentLang = 'en';
   const ANIM_MS   = 900;
+  
+const TOOL_LOGOS = {
+  'lightroom':      'images/logo-lightroom.png',
+  'photoshop':      'images/logo-photoshop.png',
+  'illustrator':    'images/logo-illustrator.png',
+  'adobe xd':       'images/logo-adobe-xd.png',
+  'premiere':       'images/logo-premiere.png',
+  'after effects':  'images/logo-after-effects.png',
+  'figma':          'images/logo-figma.png',
+  'capture one':    'images/logo-capture-one.png',
+  'davinci':        'images/logo-davinci.png',
+};
+
+// Hangi fotoğrafta hangi araç? (index 0 = work_belt_01)
+const WORK_TOOLS = [
+  ['photoshop'],                    // work_belt_01.jpg - Sadece Photoshop
+  ['lightroom'],                    // work_belt_02.jpg - Sadece Lightroom
+  ['adobe xd'],                     // work_belt_03.jpg - Sadece Adobe XD
+  ['photoshop', 'lightroom'],       // work_belt_04.jpg - Photoshop + Lightroom
+  ['lightroom'],                    // work_belt_05.jpg - Sadece Lightroom
+  ['photoshop'],                    // work_belt_06.jpg - Sadece Photoshop
+  ['adobe xd', 'photoshop'],        // work_belt_07.jpg - XD + Photoshop
+  [],                               // work_belt_08.jpg - Hiçbiri
+  // ... kaç tane work_belt dosyan varsa o kadar
+];
+
+const ABOUT_TOOLS = ['lightroom', 'photoshop', 'adobe xd', 'figma', 'premiere'];
+
+// ⭐ Bu değişken burada tanımlanacak (başka yerde değil!)
+let triggerWorkFilter = null;
 
   function goTo(index) {
     if (index === current || isAnimating) return;
@@ -90,31 +120,7 @@
     const elTotal = document.getElementById('workTotal');
     const hint    = document.getElementById('workDragHint');
     if (!wrap || !belt) return;
-	// ── Tool logo mapping ─────────────────
-	// Kısa isim → logo dosyası (images/ klasörüne koy)
-	const TOOL_LOGOS = {
-	  'lightroom':      'images/logo-lightroom.png',
-	  'photoshop':      'images/logo-photoshop.png',
-	  'illustrator':    'images/logo-illustrator.png',
-	  'adobe xd':       'images/logo-adobe-xd.png',
-	  'premiere':       'images/logo-premiere.png',
-	  'after effects':  'images/logo-after-effects.png',
-	  'figma':          'images/logo-figma.png',
-	  'capture one':    'images/logo-capture-one.png',
-	  'davinci':        'images/logo-davinci.png',
-	};
 
-	// Hangi fotoğrafta hangi araç? (index 0 = work_belt_01)
-	// Boş bırakırsan o kartta rozet çıkmaz.
-	const WORK_TOOLS = [
-	  'lightroom',   // work_belt_01
-	  'adobe xd',    // work_belt_02
-	  'photoshop',   // work_belt_03
-	  '',            // work_belt_04
-	  '',            // work_belt_05
-	  // ... devam eder
-	];
-    // ── 1. Detect images: try work_belt_01 … work_belt_20
     const MAX_PROBE = 20;
     const found = [];
 
@@ -131,14 +137,66 @@
       })
     );
 
-    const images = found.filter(Boolean); // remove gaps
+    const images = found.filter(Boolean);
     const count  = images.length;
 
     if (elTotal) elTotal.textContent = String(count || 0).padStart(2, '0');
 
-// ── 2. Build cards (original + 2 clones for infinite loop)
-    
-    // Lightbox (Tam Ekran) Oluşturucu Fonksiyon
+    let currentFilter = null;
+
+    function getFilteredImages(filter) {
+      if (!filter) return images;
+      return images.filter((_, i) => {
+        const tools = WORK_TOOLS[i] || [];
+        return tools.map(t => t.toLowerCase()).includes(filter);
+      });
+    }
+
+    // ⭐ applyFilter fonksiyonu burada tanımlanıyor
+    function applyFilter(toolKey) {
+      buildBeltCards(toolKey);
+      if (filterBar) {
+        filterBar.classList.add('active');
+        if (filterLabel) filterLabel.textContent = toolKey.toUpperCase();
+      }
+      goTo(2);
+    }
+
+    // ⭐ Köprüyü hemen bağla
+    triggerWorkFilter = applyFilter;
+
+    function buildBeltCards(filter) {
+      belt.innerHTML = '';
+      currentFilter = filter;
+      const srcList = getFilteredImages(filter);
+      const count = srcList.length;
+      if (elTotal) elTotal.textContent = String(count).padStart(2, '0');
+
+      const sets = [srcList, srcList, srcList];
+      sets.forEach((set, setIdx) => {
+        set.forEach((src, i) => {
+          const origIdx = images.indexOf(src);
+          const tool = WORK_TOOLS[origIdx] || [];
+          belt.appendChild(makeCard(src, setIdx * srcList.length + i, tool));
+        });
+      });
+
+      requestAnimationFrame(() => requestAnimationFrame(initOffset));
+    }
+
+    const filterBar   = document.getElementById('workFilterBar');
+    const filterLabel = document.getElementById('workFilterLabel');
+    const filterClear = document.getElementById('workFilterClear');
+
+    if (filterClear) {
+      filterClear.addEventListener('click', () => {
+        buildBeltCards(null);
+        filterBar.classList.remove('active');
+        document.querySelectorAll('.about__tool-btn').forEach(b => b.classList.remove('active'));
+      });
+    }
+
+    // Lightbox
     function openLightbox(imageSrc) {
       const overlay = document.createElement('div');
       Object.assign(overlay.style, {
@@ -159,13 +217,11 @@
       overlay.appendChild(img);
       document.body.appendChild(overlay);
       
-      // Animasyonu tetikle
       requestAnimationFrame(() => {
         overlay.style.opacity = '1';
         img.style.transform = 'scale(1)';
       });
       
-      // Tıklanınca kapat
       overlay.addEventListener('click', () => {
         overlay.style.opacity = '0';
         img.style.transform = 'scale(0.95)';
@@ -173,74 +229,70 @@
       });
     }
 
-	function makeCard(src, idx, tool) {
-	  const card = document.createElement('div');
-	  card.className = 'work__belt-card';
-	  card.dataset.index = idx;
+    function makeCard(src, idx, tool) {
+      const card = document.createElement('div');
+      card.className = 'work__belt-card';
+      card.dataset.index = idx;
 
-	  const img = document.createElement('img');
-	  img.src = src;
-	  img.alt = `Work ${idx + 1}`;
-	  img.draggable = false;
-	  card.appendChild(img);
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = `Work ${idx + 1}`;
+      img.draggable = false;
+      card.appendChild(img);
 
-	  const fallback = document.createElement('div');
-	  fallback.className = 'work__belt-card-fallback';
-	  fallback.textContent = src.split('/').pop();
-	  card.appendChild(fallback);
+      const fallback = document.createElement('div');
+      fallback.className = 'work__belt-card-fallback';
+      fallback.textContent = src.split('/').pop();
+      card.appendChild(fallback);
 
-	  const info = document.createElement('div');
-	  info.className = 'work__belt-card-info';
-	  info.innerHTML = `
-		<span class="work__belt-card-num">${String(idx + 1).padStart(2, '0')}</span>
-		<span class="work__belt-card-label">work_belt_${String(idx + 1).padStart(2, '0')}.jpg</span>
-	  `;
-	  card.appendChild(info);
+      const info = document.createElement('div');
+      info.className = 'work__belt-card-info';
+      info.innerHTML = `
+        <span class="work__belt-card-num">${String(idx + 1).padStart(2, '0')}</span>
+        <span class="work__belt-card-label">work_belt_${String(idx + 1).padStart(2, '0')}.jpg</span>
+      `;
+      card.appendChild(info);
 
-	  // ── Tool badge (sağ alt köşe) ──────────
-	  const toolKey = (tool || '').toLowerCase().trim();
-	  if (toolKey && TOOL_LOGOS[toolKey]) {
-		const badge = document.createElement('div');
-		badge.className = 'work__belt-card-tool';
-		const toolImg = document.createElement('img');
-		toolImg.src = TOOL_LOGOS[toolKey];
-		toolImg.alt = tool;
-		badge.appendChild(toolImg);
-		card.appendChild(badge);
-	  }
+      const tools = Array.isArray(tool) ? tool : (tool ? [tool] : []);
+      const validTools = tools.filter(t => TOOL_LOGOS[t.toLowerCase().trim()]);
+      if (validTools.length) {
+        const toolsWrap = document.createElement('div');
+        toolsWrap.className = 'work__belt-card-tools';
+        validTools.forEach(t => {
+          const badge = document.createElement('div');
+          badge.className = 'work__belt-card-tool';
+          const toolImg = document.createElement('img');
+          toolImg.src = TOOL_LOGOS[t.toLowerCase().trim()];
+          toolImg.alt = t;
+          badge.appendChild(toolImg);
+          toolsWrap.appendChild(badge);
+        });
+        card.appendChild(toolsWrap);
+      }
 
-	  let startX, startY;
-	  card.addEventListener('pointerdown', e => { startX = e.clientX; startY = e.clientY; });
-	  card.addEventListener('pointerup', e => {
-		const diffX = Math.abs(e.clientX - startX);
-		const diffY = Math.abs(e.clientY - startY);
-		if (diffX < 5 && diffY < 5) openLightbox(src);
-	  });
+      let startX, startY;
+      card.addEventListener('pointerdown', e => { startX = e.clientX; startY = e.clientY; });
+      card.addEventListener('pointerup', e => {
+        const diffX = Math.abs(e.clientX - startX);
+        const diffY = Math.abs(e.clientY - startY);
+        if (diffX < 5 && diffY < 5) openLightbox(src);
+      });
 
-	  return card;
-	}
+      return card;
+    }
 
-    // If no images found, show placeholder cards
     const srcList = count > 0 ? images : Array.from({ length: 5 }, (_, i) =>
       `images/work_belt_${String(i + 1).padStart(2, '0')}.jpg`
     );
 
-    // Triple the cards: [set A] [set B — original] [set C]
-    const sets = [srcList, srcList, srcList];
-    sets.forEach((set, setIdx) => {
-      set.forEach((src, i) => {
-        belt.appendChild(makeCard(src, setIdx * srcList.length + i, WORK_TOOLS[i] || ''));
-      });
-    });
+    buildBeltCards(null);
 
-    // ── 3. Drag logic
     const GAP      = 16;
     const cardW    = () => belt.querySelector('.work__belt-card')?.offsetWidth || 400;
     const setW     = () => srcList.length * (cardW() + GAP);
 
-    // Start at beginning of set B (middle)
     let offsetX    = 0;
-    let startSet   = 0; // will be set after first render
+    let startSet   = 0;
 
     function initOffset() {
       startSet = -setW();
@@ -248,7 +300,6 @@
       belt.style.transform = `translateX(${offsetX}px)`;
     }
 
-    // Wait for layout
     requestAnimationFrame(() => {
       requestAnimationFrame(initOffset);
     });
@@ -285,7 +336,7 @@
     function updateCounter() {
       if (!elCur || !srcList.length) return;
       const sw  = setW();
-      const rel = -(offsetX - startSet); // how far we are from set B start
+      const rel = -(offsetX - startSet);
       const idx = Math.round(rel / (cardW() + GAP));
       const mod = ((idx % srcList.length) + srcList.length) % srcList.length;
       elCur.textContent = String(mod + 1).padStart(2, '0');
@@ -321,7 +372,6 @@
       wrap.classList.remove('is-dragging');
       if (hint) hint.classList.remove('dragging');
 
-      // Momentum / coast
       let vel = velocity * 12;
       const friction = 0.92;
 
@@ -336,113 +386,132 @@
       rafId = requestAnimationFrame(coast);
     }
 
-    // Mouse
     wrap.addEventListener('mousedown', e => { e.preventDefault(); onDragStart(e.clientX); });
     window.addEventListener('mousemove', e => { if (isDragging) onDragMove(e.clientX); });
     window.addEventListener('mouseup', () => { if (isDragging) onDragEnd(); });
 
-    // Touch
     wrap.addEventListener('touchstart', e => {
-      // only hijack horizontal drags inside belt
       onDragStart(e.touches[0].clientX);
     }, { passive: true });
 
     wrap.addEventListener('touchmove', e => {
       if (!isDragging) return;
-      e.stopPropagation(); // don't trigger panel change
+      e.stopPropagation();
       onDragMove(e.touches[0].clientX);
     }, { passive: true });
 
     wrap.addEventListener('touchend', () => { if (isDragging) onDragEnd(); }, { passive: true });
   }
 
+  function initAboutTools() {
+    const wrap = document.getElementById('aboutTools');
+    if (!wrap) return;
+
+    ABOUT_TOOLS.forEach(toolKey => {
+      if (!TOOL_LOGOS[toolKey]) return;
+      const btn = document.createElement('button');
+      btn.className = 'about__tool-btn';
+      btn.dataset.tool = toolKey;
+      btn.title = toolKey;
+
+      const img = document.createElement('img');
+      img.src = TOOL_LOGOS[toolKey];
+      img.alt = toolKey;
+      btn.appendChild(img);
+
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.about__tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (triggerWorkFilter) triggerWorkFilter(toolKey);
+      });
+
+      wrap.appendChild(btn);
+    });
+  }
+
   loadContent();
   initBelt();
+  initAboutTools();
 
-/* ── Content loader ────────────────── */
-async function loadContent() {
-  const c = window.SITE_CONTENT[currentLang];
-  if (!c) { console.warn('SITE_CONTENT bulunamadı.'); return; }
+  /* ── Content loader ────────────────── */
+  async function loadContent() {
+    const c = window.SITE_CONTENT[currentLang];
+    if (!c) { console.warn('SITE_CONTENT bulunamadı.'); return; }
 
-  const set = (sel, html, prop = 'innerHTML') => {
-    const el = document.querySelector(sel);
-    if (el) el[prop] = html;
-  };
+    const set = (sel, html, prop = 'innerHTML') => {
+      const el = document.querySelector(sel);
+      if (el) el[prop] = html;
+    };
 
-  // Nav
-  set('.nav__logo', c.nav.logo + '<sup>®</sup>');
+    set('.nav__logo', c.nav.logo + '<sup>®</sup>');
 
-  // Hero
-  set('.hero__subtitle', c.home.hero.subtitle, 'textContent');
-  const heroCopyP = document.querySelector('.hero__copy p');
-  if (heroCopyP) heroCopyP.innerHTML = c.home.hero.copy;
-  set('.hero__clients-label', c.home.hero.clientsLabel, 'textContent');
-  set('.hero__card-title',    c.home.hero.card.title);
-  set('.hero__card-year',     c.home.hero.card.year, 'textContent');
-  set('.hero__card-btn',      c.home.hero.card.button, 'textContent');
-  set('.rating-score',        c.home.hero.ratingScore, 'textContent');
-  set('.hero__trust',         c.home.hero.trust);
+    set('.hero__subtitle', c.home.hero.subtitle, 'textContent');
+    const heroCopyP = document.querySelector('.hero__copy p');
+    if (heroCopyP) heroCopyP.innerHTML = c.home.hero.copy;
+    set('.hero__clients-label', c.home.hero.clientsLabel, 'textContent');
+    set('.hero__card-title',    c.home.hero.card.title);
+    set('.hero__card-year',     c.home.hero.card.year, 'textContent');
+    set('.hero__card-btn',      c.home.hero.card.button, 'textContent');
+    set('.rating-score',        c.home.hero.ratingScore, 'textContent');
+    set('.hero__trust',         c.home.hero.trust);
 
-  // Quote
-  set('.quote-author__name', c.home.quote.authorName, 'textContent');
-  set('.quote-author__role', c.home.quote.authorRole, 'textContent');
-  const quoteEl = document.querySelector('.quote-text');
-  if (quoteEl) quoteEl.innerHTML =
-    `<span class="quote-mark">"</span>${c.home.quote.text}<span class="quote-mark">"</span>`;
+    set('.quote-author__name', c.home.quote.authorName, 'textContent');
+    set('.quote-author__role', c.home.quote.authorRole, 'textContent');
+    const quoteEl = document.querySelector('.quote-text');
+    if (quoteEl) quoteEl.innerHTML =
+      `<span class="quote-mark">"</span>${c.home.quote.text}<span class="quote-mark">"</span>`;
 
-  // About
-  set('[data-panel="1"] .section-label', c.about.label, 'textContent');
-  set('.about__title', c.about.title);
-  const bios = document.querySelectorAll('.about__bio');
-  if (bios[0]) bios[0].textContent = c.about.bio1;
-  if (bios[1]) bios[1].textContent = c.about.bio2;
-  document.querySelectorAll('.about__stat').forEach((el, i) => {
-    if (!c.about.stats[i]) return;
-    el.querySelector('.about__stat-num').textContent   = c.about.stats[i].num;
-    el.querySelector('.about__stat-label').textContent = c.about.stats[i].label;
-  });
+    set('[data-panel="1"] .section-label', c.about.label, 'textContent');
+    set('.about__title', c.about.title);
+    const bios = document.querySelectorAll('.about__bio');
+    if (bios[0]) bios[0].textContent = c.about.bio1;
+    if (bios[1]) bios[1].textContent = c.about.bio2;
+    document.querySelectorAll('.about__stat').forEach((el, i) => {
+      if (!c.about.stats[i]) return;
+      el.querySelector('.about__stat-num').textContent   = c.about.stats[i].num;
+      el.querySelector('.about__stat-label').textContent = c.about.stats[i].label;
+    });
 
-  // Work
-  set('[data-panel="2"] .section-label', c.work.label, 'textContent');
-  set('.work__title', c.work.title);
-  const dragSpan = document.querySelector('.work__drag-hint span');
-  if (dragSpan) dragSpan.textContent = c.work.dragHint;
+    set('[data-panel="2"] .section-label', c.work.label, 'textContent');
+    set('.work__title', c.work.title);
+    const dragSpan = document.querySelector('.work__drag-hint span');
+    if (dragSpan) dragSpan.textContent = c.work.dragHint;
 
-  // Contact
-  set('[data-panel="3"] .section-label', c.contact.label, 'textContent');
-  set('.contact__title', c.contact.title);
-  set('.contact__sub',   c.contact.sub, 'textContent');
-  document.querySelectorAll('.contact__link').forEach((el, i) => {
-    if (!c.contact.links[i]) return;
-    el.textContent = c.contact.links[i].text;
-    el.href        = c.contact.links[i].href;
-  });
-  const footerSpans = document.querySelectorAll('.contact__footer span');
-  if (footerSpans[0]) footerSpans[0].textContent = c.contact.footerCopyright;
-  if (footerSpans[1]) footerSpans[1].textContent = c.contact.footerLocation;
+    set('[data-panel="3"] .section-label', c.contact.label, 'textContent');
+    set('.contact__title', c.contact.title);
+    set('.contact__sub',   c.contact.sub, 'textContent');
+    document.querySelectorAll('.contact__link').forEach((el, i) => {
+      if (!c.contact.links[i]) return;
+      el.textContent = c.contact.links[i].text;
+      el.href        = c.contact.links[i].href;
+    });
+    const footerSpans = document.querySelectorAll('.contact__footer span');
+    if (footerSpans[0]) footerSpans[0].textContent = c.contact.footerCopyright;
+    if (footerSpans[1]) footerSpans[1].textContent = c.contact.footerLocation;
 
-  // Contact form
-  document.querySelectorAll('.form-group').forEach((el, i) => {
-    const f = c.contact.form.fields[i];
-    if (!f) return;
-    const label = el.querySelector('label');
-    if (label) label.textContent = f.label;
-    const field = f.type === 'textarea'
-      ? el.querySelector('textarea')
-      : el.querySelector('input');
-    if (field) field.placeholder = f.placeholder;
-  });
-  set('.contact__submit', c.contact.form.submit, 'textContent');
-}
-/* ── Lang toggle ───────────────────── */
-const langToggle = document.getElementById('langToggle');
-if (langToggle) {
-  langToggle.addEventListener('click', () => {
-	currentLang = currentLang === 'en' ? 'tr' : 'en';
-	langToggle.textContent = currentLang.toUpperCase();
-	loadContent();
-  });
-}
+    document.querySelectorAll('.form-group').forEach((el, i) => {
+      const f = c.contact.form.fields[i];
+      if (!f) return;
+      const label = el.querySelector('label');
+      if (label) label.textContent = f.label;
+      const field = f.type === 'textarea'
+        ? el.querySelector('textarea')
+        : el.querySelector('input');
+      if (field) field.placeholder = f.placeholder;
+    });
+    set('.contact__submit', c.contact.form.submit, 'textContent');
+  }
+
+  /* ── Lang toggle ───────────────────── */
+  const langToggle = document.getElementById('langToggle');
+  if (langToggle) {
+    langToggle.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'tr' : 'en';
+      langToggle.textContent = currentLang.toUpperCase();
+      loadContent();
+    });
+  }
+
   /* ── Custom cursor ─────────────────── */
   if (window.matchMedia('(hover: hover)').matches) {
     const cursor = document.createElement('div');

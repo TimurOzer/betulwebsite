@@ -26,16 +26,14 @@ const TOOL_LOGOS = {
 };
 
 // Hangi fotoğrafta hangi araç? (index 0 = work_belt_01)
-const WORK_TOOLS = [
-  ['photoshop'],                    // work_belt_01.jpg - Sadece Photoshop
-  ['lightroom'],                    // work_belt_02.jpg - Sadece Lightroom
-  ['adobe xd'],                     // work_belt_03.jpg - Sadece Adobe XD
-  ['photoshop', 'lightroom'],       // work_belt_04.jpg - Photoshop + Lightroom
-  ['lightroom'],                    // work_belt_05.jpg - Sadece Lightroom
-  ['photoshop'],                    // work_belt_06.jpg - Sadece Photoshop
-  ['adobe xd', 'photoshop'],        // work_belt_07.jpg - XD + Photoshop
-  [],                               // work_belt_08.jpg - Hiçbiri
-];
+const WORK_TOOLS = {
+  'work_belt_01.jpg': ['illustrator'],
+  'work_belt_02.jpg': ['illustrator', 'photoshop'],
+  'work_belt_03.jpg': ['illustrator', 'photoshop'],
+  'work_belt_04.jpg': ['illustrator'],
+  'work_belt_05.jpg': ['adobe xd'],
+  'work_belt_06.jpg': ['illustrator']
+};
 
 const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma'];
 
@@ -120,7 +118,7 @@ let triggerWorkFilter = null;
     const hint    = document.getElementById('workDragHint');
     if (!wrap || !belt) return;
 
-    const MAX_PROBE = 20;
+    const MAX_PROBE = 6;
     const found = [];
 
     await Promise.all(
@@ -142,14 +140,15 @@ let triggerWorkFilter = null;
     if (elTotal) elTotal.textContent = String(count || 0).padStart(2, '0');
 
     let currentFilter = null;
-
-    function getFilteredImages(filter) {
-      if (!filter) return images;
-      return images.filter((_, i) => {
-        const tools = WORK_TOOLS[i] || [];
-        return tools.map(t => t.toLowerCase()).includes(filter);
-      });
-    }
+	let activeImages = []; // YENİ EKLENEN SATIR
+	function getFilteredImages(filter) {
+	  if (!filter) return images;
+	  return images.filter((src) => {
+		const filename = src.split('/').pop(); // Sadece dosya adını alır (örn: work_belt_02.jpg)
+		const tools = WORK_TOOLS[filename] || [];
+		return tools.map(t => t.toLowerCase()).includes(filter);
+	  });
+	}
 
     // ⭐ applyFilter fonksiyonu burada tanımlanıyor
     function applyFilter(toolKey) {
@@ -164,24 +163,27 @@ let triggerWorkFilter = null;
     // ⭐ Köprüyü hemen bağla
     triggerWorkFilter = applyFilter;
 
-    function buildBeltCards(filter) {
-      belt.innerHTML = '';
-      currentFilter = filter;
-      const srcList = getFilteredImages(filter);
-      const count = srcList.length;
-      if (elTotal) elTotal.textContent = String(count).padStart(2, '0');
+	function buildBeltCards(filter) {
+	  belt.innerHTML = '';
+	  currentFilter = filter;
 
-      const sets = [srcList, srcList, srcList];
-      sets.forEach((set, setIdx) => {
-        set.forEach((src, i) => {
-          const origIdx = images.indexOf(src);
-          const tool = WORK_TOOLS[origIdx] || [];
-          belt.appendChild(makeCard(src, setIdx * srcList.length + i, tool));
-        });
-      });
+	  // const kelimesi silindi ve yeni değişkene atandı
+	  activeImages = getFilteredImages(filter); 
+	  const count = activeImages.length;
 
-      requestAnimationFrame(() => requestAnimationFrame(initOffset));
-    }
+	  if (elTotal) elTotal.textContent = String(count).padStart(2, '0');
+
+	  const sets = [activeImages, activeImages, activeImages];
+	  sets.forEach((set, setIdx) => {
+		set.forEach((src, i) => {
+			const filename = src.split('/').pop();
+			const tool = WORK_TOOLS[filename] || [];
+			belt.appendChild(makeCard(src, setIdx * activeImages.length + i, tool));
+		});
+	  });
+
+	  requestAnimationFrame(() => requestAnimationFrame(initOffset));
+	}
 
     const filterBar   = document.getElementById('workFilterBar');
     const filterLabel = document.getElementById('workFilterLabel');
@@ -280,15 +282,11 @@ let triggerWorkFilter = null;
       return card;
     }
 
-    const srcList = count > 0 ? images : Array.from({ length: 5 }, (_, i) =>
-      `images/work_belt_${String(i + 1).padStart(2, '0')}.jpg`
-    );
-
     buildBeltCards(null);
 
-    const GAP      = 16;
-    const cardW    = () => belt.querySelector('.work__belt-card')?.offsetWidth || 400;
-    const setW     = () => srcList.length * (cardW() + GAP);
+	const GAP      = 16;
+	const cardW    = () => belt.querySelector('.work__belt-card')?.offsetWidth || 400;
+	const setW     = () => activeImages.length * (cardW() + GAP); // srcList yerine activeImages oldu
 
     let offsetX    = 0;
     let startSet   = 0;
@@ -332,14 +330,14 @@ let triggerWorkFilter = null;
       }
     }
 
-    function updateCounter() {
-      if (!elCur || !srcList.length) return;
-      const sw  = setW();
-      const rel = -(offsetX - startSet);
-      const idx = Math.round(rel / (cardW() + GAP));
-      const mod = ((idx % srcList.length) + srcList.length) % srcList.length;
-      elCur.textContent = String(mod + 1).padStart(2, '0');
-    }
+	function updateCounter() {
+	  if (!elCur || !activeImages.length) return;
+	  const sw  = setW();
+	  const rel = -(offsetX - startSet);
+	  const idx = Math.round(rel / (cardW() + GAP));
+	  const mod = ((idx % activeImages.length) + activeImages.length) % activeImages.length;
+	  elCur.textContent = String(mod + 1).padStart(2, '0');
+	}
 
     function onDragStart(x) {
       isDragging  = true;
@@ -453,7 +451,7 @@ let triggerWorkFilter = null;
     set('.hero__card-btn',      c.home.hero.card.button, 'textContent');
     set('.rating-score',        c.home.hero.ratingScore, 'textContent');
     set('.hero__trust',         c.home.hero.trust);
-
+	set('#aboutToolsLabel', c.about.toolsLabel, 'textContent');
     set('.quote-author__name', c.home.quote.authorName, 'textContent');
     set('.quote-author__role', c.home.quote.authorRole, 'textContent');
     const quoteEl = document.querySelector('.quote-text');

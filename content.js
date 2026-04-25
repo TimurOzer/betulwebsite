@@ -24,13 +24,14 @@ var SITE_CONTENT = {
     about: {
       label: "— 01 / About Me",
       title: "Behind<br />the screens.",
+		toolsLabel: "Select a tool, explore the projects ↴",
       bio1: "I'm a Communication and Design junior at Istanbul Gelişim University, driven by an endless curiosity for digital storytelling. My playground ranges from brand identities and user interfaces to full-scale video production.",
       bio2: "With complete fluency in the Adobe Creative Suite, Figma, and Final Cut Pro, my approach is versatile: combining technical precision with bold, out-of-the-box thinking to bring ambitious visions to life.",
       stats: [
         { num: "3rd",   label: "Year Uni Student" },
         { num: "10+",   label: "Creative Tools Mastered" },
         { num: "100%",  label: "Creative Energy" }
-      ]
+      ]	  
     },
     work: {
       label: "— 02 / Work",
@@ -83,6 +84,7 @@ var SITE_CONTENT = {
     about: {
       label: "— 01 / Hakkımda",
       title: "Ekranların<br />arkasında.",
+		toolsLabel: "Araçları seçin, projeleri keşfedin ↴",	  	  
       bio1: "İstanbul Gelişim Üniversitesi İletişim ve Tasarım bölümünde 3. sınıf öğrencisiyim; dijital hikaye anlatıcılığına duyduğum merak hiç bitmiyor. Marka kimliklerinden kullanıcı arayüzlerine, tam kapsamlı video prodüksiyonuna uzanan geniş bir alanda çalışıyorum.",
       bio2: "Adobe Creative Suite, Figma ve Final Cut Pro'ya tam hakimiyetle; teknik titizliği cesur ve özgün düşünceyle harmanlayarak iddialı vizyonları somut işlere dönüştürüyorum.",
       stats: [

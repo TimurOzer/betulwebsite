@@ -1177,7 +1177,7 @@ body.panels-ready {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 32px;
+  margin-top: 0px;
 }
 
 .about__tool-btn {
@@ -1247,4 +1247,15 @@ body.panels-ready {
 #workFilterClear:hover {
   border-color: rgba(255,255,255,0.8);
   color: rgba(255,255,255,0.9);
+}
+
+.about__tools-label {
+  font-size: 0.72rem;
+  color: var(--c-gray);
+  margin-top: 40px; /* İstatistiklerden olan mesafe */
+  margin-bottom: 12px; /* İkonlara olan mesafe */
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.8;
 }

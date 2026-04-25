@@ -166,19 +166,19 @@ let triggerWorkFilter = null;
 	function buildBeltCards(filter) {
 	  belt.innerHTML = '';
 	  currentFilter = filter;
-
-	  // const kelimesi silindi ve yeni değişkene atandı
-	  activeImages = getFilteredImages(filter); 
+	  activeImages = getFilteredImages(filter);
 	  const count = activeImages.length;
 
 	  if (elTotal) elTotal.textContent = String(count).padStart(2, '0');
 
-	  const sets = [activeImages, activeImages, activeImages];
+	  // EĞER 4 veya daha azsa tek set, 4'ten fazlaysa sonsuz döngü için 3 set oluştur
+	  const sets = count <= 4 ? [activeImages] : [activeImages, activeImages, activeImages];
+
 	  sets.forEach((set, setIdx) => {
 		set.forEach((src, i) => {
-			const filename = src.split('/').pop();
-			const tool = WORK_TOOLS[filename] || [];
-			belt.appendChild(makeCard(src, setIdx * activeImages.length + i, tool));
+		  const filename = src.split('/').pop();
+		  const tool = WORK_TOOLS[filename] || [];
+		  belt.appendChild(makeCard(src, setIdx * activeImages.length + i, tool));
 		});
 	  });
 
@@ -291,11 +291,13 @@ let triggerWorkFilter = null;
     let offsetX    = 0;
     let startSet   = 0;
 
-    function initOffset() {
-      startSet = -setW();
-      offsetX  = startSet;
-      belt.style.transform = `translateX(${offsetX}px)`;
-    }
+	function initOffset() {
+	  const isLooping = activeImages.length > 4;
+	  // Döngü varsa orta sete ( -setW ), yoksa en başa ( 0 ) odaklan
+	  startSet = isLooping ? -setW() : 0;
+	  offsetX  = startSet;
+	  belt.style.transform = `translateX(${offsetX}px)`;
+	}
 
     requestAnimationFrame(() => {
       requestAnimationFrame(initOffset);
@@ -319,21 +321,26 @@ let triggerWorkFilter = null;
       updateCounter();
     }
 
-    function loopCheck() {
-      const sw = setW();
-      if (offsetX < startSet - sw) {
-        offsetX += sw;
-        belt.style.transform = `translateX(${offsetX}px)`;
-      } else if (offsetX > startSet + sw) {
-        offsetX -= sw;
-        belt.style.transform = `translateX(${offsetX}px)`;
-      }
-    }
+	function loopCheck() {
+	  // 4 veya daha az fotoğraf varsa döngü kontrolünü çalıştırma
+	  if (activeImages.length <= 4) return;
+
+	  const sw = setW();
+	  if (offsetX < startSet - sw) {
+		offsetX += sw;
+		belt.style.transform = `translateX(${offsetX}px)`;
+	  } else if (offsetX > startSet + sw) {
+		offsetX -= sw;
+		belt.style.transform = `translateX(${offsetX}px)`;
+	  }
+	}
 
 	function updateCounter() {
 	  if (!elCur || !activeImages.length) return;
-	  const sw  = setW();
-	  const rel = -(offsetX - startSet);
+	  const isLooping = activeImages.length > 4;
+	  
+	  // Döngü varsa startSet'e göre, yoksa 0'a göre hesapla
+	  const rel = isLooping ? -(offsetX - startSet) : -offsetX;
 	  const idx = Math.round(rel / (cardW() + GAP));
 	  const mod = ((idx % activeImages.length) + activeImages.length) % activeImages.length;
 	  elCur.textContent = String(mod + 1).padStart(2, '0');
@@ -352,16 +359,28 @@ let triggerWorkFilter = null;
       cancelAnimationFrame(rafId);
     }
 
-    function onDragMove(x) {
-      if (!isDragging) return;
-      const dx  = x - dragStartX;
-      const now = performance.now();
-      velocity  = (x - lastX) / (now - lastTime + 1) * 16;
-      lastX     = x;
-      lastTime  = now;
-      applyTransform(dragStartOX + dx);
-      loopCheck();
-    }
+	function onDragMove(x) {
+	  if (!isDragging) return;
+	  const dx  = x - dragStartX;
+	  let targetX = dragStartOX + dx;
+
+	  // Döngü kapalıyken (4'ten az fotoğraf) sınırları koru
+	  if (activeImages.length <= 4) {
+		const maxDrag = 0; // En sol sınır
+		const minDrag = -(belt.scrollWidth - wrap.offsetWidth); // En sağ sınır
+		if (targetX > maxDrag) targetX = maxDrag;
+		if (targetX < minDrag && minDrag < 0) targetX = minDrag;
+		else if (minDrag >= 0) targetX = 0; // Ekrana sığıyorsa hiç oynatma
+	  }
+
+	  const now = performance.now();
+	  velocity  = (x - lastX) / (now - lastTime + 1) * 16;
+	  lastX     = x;
+	  lastTime  = now;
+	  
+	  applyTransform(targetX);
+	  loopCheck();
+	}
 
     function onDragEnd() {
       if (!isDragging) return;

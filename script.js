@@ -10,6 +10,7 @@
   const TOTAL     = panels.length;
   let current     = 0;
   let isAnimating = false;
+  let currentLang = 'en';
   const ANIM_MS   = 900;
 
   function goTo(index) {
@@ -333,7 +334,7 @@
 
 /* ── Content loader ────────────────── */
 async function loadContent() {
-  const c = window.SITE_CONTENT;
+  const c = window.SITE_CONTENT[currentLang];
   if (!c) { console.warn('SITE_CONTENT bulunamadı.'); return; }
 
   const set = (sel, html, prop = 'innerHTML') => {
@@ -406,7 +407,15 @@ async function loadContent() {
   });
   set('.contact__submit', c.contact.form.submit, 'textContent');
 }
-
+/* ── Lang toggle ───────────────────── */
+const langToggle = document.getElementById('langToggle');
+if (langToggle) {
+  langToggle.addEventListener('click', () => {
+	currentLang = currentLang === 'en' ? 'tr' : 'en';
+	langToggle.textContent = currentLang.toUpperCase();
+	loadContent();
+  });
+}
   /* ── Custom cursor ─────────────────── */
   if (window.matchMedia('(hover: hover)').matches) {
     const cursor = document.createElement('div');

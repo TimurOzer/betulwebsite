@@ -1114,3 +1114,30 @@ body.panels-ready {
   }
   .contact__left { border-bottom: 1px solid rgba(255,255,255,0.08); }
 }
+
+/* ── Lang toggle + Nav actions ───────── */
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-toggle {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--c-dark);
+  background: none;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 2px;
+  padding: 4px 9px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.lang-toggle:hover {
+  background: var(--c-dark);
+  color: var(--c-bg);
+  border-color: var(--c-dark);
+}

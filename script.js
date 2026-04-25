@@ -35,10 +35,9 @@ const WORK_TOOLS = [
   ['photoshop'],                    // work_belt_06.jpg - Sadece Photoshop
   ['adobe xd', 'photoshop'],        // work_belt_07.jpg - XD + Photoshop
   [],                               // work_belt_08.jpg - Hiçbiri
-  // ... kaç tane work_belt dosyan varsa o kadar
 ];
 
-const ABOUT_TOOLS = ['lightroom', 'photoshop', 'adobe xd', 'figma', 'premiere'];
+const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma'];
 
 // ⭐ Bu değişken burada tanımlanacak (başka yerde değil!)
 let triggerWorkFilter = null;

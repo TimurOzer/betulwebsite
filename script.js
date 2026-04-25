@@ -90,7 +90,30 @@
     const elTotal = document.getElementById('workTotal');
     const hint    = document.getElementById('workDragHint');
     if (!wrap || !belt) return;
+	// ── Tool logo mapping ─────────────────
+	// Kısa isim → logo dosyası (images/ klasörüne koy)
+	const TOOL_LOGOS = {
+	  'lightroom':      'images/logo-lightroom.png',
+	  'photoshop':      'images/logo-photoshop.png',
+	  'illustrator':    'images/logo-illustrator.png',
+	  'adobe xd':       'images/logo-adobe-xd.png',
+	  'premiere':       'images/logo-premiere.png',
+	  'after effects':  'images/logo-after-effects.png',
+	  'figma':          'images/logo-figma.png',
+	  'capture one':    'images/logo-capture-one.png',
+	  'davinci':        'images/logo-davinci.png',
+	};
 
+	// Hangi fotoğrafta hangi araç? (index 0 = work_belt_01)
+	// Boş bırakırsan o kartta rozet çıkmaz.
+	const WORK_TOOLS = [
+	  'lightroom',   // work_belt_01
+	  'adobe xd',    // work_belt_02
+	  'photoshop',   // work_belt_03
+	  '',            // work_belt_04
+	  '',            // work_belt_05
+	  // ... devam eder
+	];
     // ── 1. Detect images: try work_belt_01 … work_belt_20
     const MAX_PROBE = 20;
     const found = [];
@@ -150,48 +173,52 @@
       });
     }
 
-    function makeCard(src, idx) {
-      const card = document.createElement('div');
-      card.className = 'work__belt-card';
-      card.dataset.index = idx;
+	function makeCard(src, idx, tool) {
+	  const card = document.createElement('div');
+	  card.className = 'work__belt-card';
+	  card.dataset.index = idx;
 
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = `Work ${idx + 1}`;
-      img.draggable = false;
-      card.appendChild(img);
+	  const img = document.createElement('img');
+	  img.src = src;
+	  img.alt = `Work ${idx + 1}`;
+	  img.draggable = false;
+	  card.appendChild(img);
 
-      const fallback = document.createElement('div');
-      fallback.className = 'work__belt-card-fallback';
-      fallback.textContent = src.split('/').pop();
-      card.appendChild(fallback);
+	  const fallback = document.createElement('div');
+	  fallback.className = 'work__belt-card-fallback';
+	  fallback.textContent = src.split('/').pop();
+	  card.appendChild(fallback);
 
-      const info = document.createElement('div');
-      info.className = 'work__belt-card-info';
-      info.innerHTML = `
-        <span class="work__belt-card-num">${String(idx + 1).padStart(2, '0')}</span>
-        <span class="work__belt-card-label">work_belt_${String(idx + 1).padStart(2, '0')}.jpg</span>
-      `;
-      card.appendChild(info);
+	  const info = document.createElement('div');
+	  info.className = 'work__belt-card-info';
+	  info.innerHTML = `
+		<span class="work__belt-card-num">${String(idx + 1).padStart(2, '0')}</span>
+		<span class="work__belt-card-label">work_belt_${String(idx + 1).padStart(2, '0')}.jpg</span>
+	  `;
+	  card.appendChild(info);
 
-      // Sürükleme ve tıklama (lightbox) ayrımı
-      let startX, startY;
-      card.addEventListener('pointerdown', e => {
-        startX = e.clientX;
-        startY = e.clientY;
-      });
-      
-      card.addEventListener('pointerup', e => {
-        const diffX = Math.abs(e.clientX - startX);
-        const diffY = Math.abs(e.clientY - startY);
-        // Eğer fare sadece tıklamak için kullanıldıysa (sürüklenmediyse) resmi aç
-        if (diffX < 5 && diffY < 5) {
-          openLightbox(src);
-        }
-      });
+	  // ── Tool badge (sağ alt köşe) ──────────
+	  const toolKey = (tool || '').toLowerCase().trim();
+	  if (toolKey && TOOL_LOGOS[toolKey]) {
+		const badge = document.createElement('div');
+		badge.className = 'work__belt-card-tool';
+		const toolImg = document.createElement('img');
+		toolImg.src = TOOL_LOGOS[toolKey];
+		toolImg.alt = tool;
+		badge.appendChild(toolImg);
+		card.appendChild(badge);
+	  }
 
-      return card;
-    }
+	  let startX, startY;
+	  card.addEventListener('pointerdown', e => { startX = e.clientX; startY = e.clientY; });
+	  card.addEventListener('pointerup', e => {
+		const diffX = Math.abs(e.clientX - startX);
+		const diffY = Math.abs(e.clientY - startY);
+		if (diffX < 5 && diffY < 5) openLightbox(src);
+	  });
+
+	  return card;
+	}
 
     // If no images found, show placeholder cards
     const srcList = count > 0 ? images : Array.from({ length: 5 }, (_, i) =>
@@ -202,7 +229,7 @@
     const sets = [srcList, srcList, srcList];
     sets.forEach((set, setIdx) => {
       set.forEach((src, i) => {
-        belt.appendChild(makeCard(src, setIdx * srcList.length + i));
+        belt.appendChild(makeCard(src, setIdx * srcList.length + i, WORK_TOOLS[i] || ''));
       });
     });
 

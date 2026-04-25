@@ -112,7 +112,43 @@
 
     if (elTotal) elTotal.textContent = String(count || 0).padStart(2, '0');
 
-    // ── 2. Build cards (original + 2 clones for infinite loop)
+// ── 2. Build cards (original + 2 clones for infinite loop)
+    
+    // Lightbox (Tam Ekran) Oluşturucu Fonksiyon
+    function openLightbox(imageSrc) {
+      const overlay = document.createElement('div');
+      Object.assign(overlay.style, {
+        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+        backgroundColor: 'rgba(0,0,0,0.92)', zIndex: '9999',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        opacity: '0', transition: 'opacity 0.3s ease', cursor: 'zoom-out'
+      });
+      
+      const img = document.createElement('img');
+      img.src = imageSrc;
+      Object.assign(img.style, {
+        maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain',
+        borderRadius: '8px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+        transform: 'scale(0.95)', transition: 'transform 0.3s ease'
+      });
+      
+      overlay.appendChild(img);
+      document.body.appendChild(overlay);
+      
+      // Animasyonu tetikle
+      requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        img.style.transform = 'scale(1)';
+      });
+      
+      // Tıklanınca kapat
+      overlay.addEventListener('click', () => {
+        overlay.style.opacity = '0';
+        img.style.transform = 'scale(0.95)';
+        setTimeout(() => overlay.remove(), 300);
+      });
+    }
+
     function makeCard(src, idx) {
       const card = document.createElement('div');
       card.className = 'work__belt-card';
@@ -136,6 +172,23 @@
         <span class="work__belt-card-label">work_belt_${String(idx + 1).padStart(2, '0')}.jpg</span>
       `;
       card.appendChild(info);
+
+      // Sürükleme ve tıklama (lightbox) ayrımı
+      let startX, startY;
+      card.addEventListener('pointerdown', e => {
+        startX = e.clientX;
+        startY = e.clientY;
+      });
+      
+      card.addEventListener('pointerup', e => {
+        const diffX = Math.abs(e.clientX - startX);
+        const diffY = Math.abs(e.clientY - startY);
+        // Eğer fare sadece tıklamak için kullanıldıysa (sürüklenmediyse) resmi aç
+        if (diffX < 5 && diffY < 5) {
+          openLightbox(src);
+        }
+      });
+
       return card;
     }
 

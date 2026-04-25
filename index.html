@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Betül® — through my lens</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav__logo">Betül<sup>®</sup></div>
+    <nav class="nav__links">
+      <a href="#" data-panel="0" class="nav-link active">Home</a>
+      <a href="#" data-panel="1" class="nav-link">About Me</a>
+      <a href="#" data-panel="2" class="nav-link">Work</a>
+      <a href="#" data-panel="3" class="nav-link">Contact</a>
+    </nav>
+    <button class="nav__burger" id="burgerBtn" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" data-panel="0" class="nav-link">Home</a>
+    <a href="#" data-panel="1" class="nav-link">About Me</a>
+    <a href="#" data-panel="2" class="nav-link">Work</a>
+    <a href="#" data-panel="3" class="nav-link">Contact</a>
+  </div>
+
+  <!-- PANEL 0: HOME -->
+  <div class="panel" data-panel="0">
+  <section class="hero">
+    <div class="hero__bg">
+      <!-- Main hero image placeholder -->
+      <div class="hero__img-placeholder">
+        <img src="images/hero-main.jpg" alt="Hero" class="hero__img" onerror="this.style.display='none'" />
+        <div class="hero__img-fallback">
+          <span>hero&#8209;main.jpg</span>
+        </div>
+      </div>
+      <div class="hero__overlay"></div>
+    </div>
+
+    <div class="hero__content">
+      <!-- Top-left crosshair markers -->
+      <span class="marker marker--tl">+</span>
+      <span class="marker marker--tc">+</span>
+      <span class="marker marker--tr">+</span>
+      <span class="marker marker--bl">+</span>
+      <span class="marker marker--br">+</span>
+
+      <!-- Title -->
+      <div class="hero__title-wrap">
+        <h1 class="hero__title">Betül<sup>®</sup></h1>
+        <p class="hero__subtitle">through my lens</p>
+      </div>
+
+      <!-- Body copy -->
+      <div class="hero__copy">
+        <span class="hero__dash">—</span>
+        <p>Betül real emotions and turn fleeting<br />
+          <strong>moments—weddings, family bonds, or shared<br />
+          laughter</strong> into lasting memories.</p>
+      </div>
+
+      <!-- Client avatars top-right -->
+      <div class="hero__clients">
+        <div class="hero__avatars">
+          <div class="avatar" style="background:#888">
+            <img src="images/avatar-1.jpg" alt="" onerror="this.style.display='none'" />
+          </div>
+          <div class="avatar" style="background:#aaa">
+            <img src="images/avatar-2.jpg" alt="" onerror="this.style.display='none'" />
+          </div>
+          <div class="avatar" style="background:#666">
+            <img src="images/avatar-3.jpg" alt="" onerror="this.style.display='none'" />
+          </div>
+        </div>
+        <p class="hero__clients-label">Happy clients worldwide</p>
+      </div>
+
+      <!-- Floating card -->
+      <div class="hero__card">
+        <div class="hero__card-img">
+          <img src="images/card-photo.jpg" alt="Creative photography" onerror="this.style.display='none'" />
+          <div class="hero__card-img-fallback">card&#8209;photo.jpg</div>
+        </div>
+        <div class="hero__card-body">
+          <p class="hero__card-title">Professional creative<br />photography</p>
+          <div class="hero__card-footer">
+            <span class="hero__card-year">© 2025</span>
+            <button class="hero__card-btn">Let's chat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar inside hero -->
+    <div class="hero__bottom">
+      <div class="hero__rating">
+        <div class="stars">★★★★★</div>
+        <span class="rating-score">4.9/5</span>
+      </div>
+      <p class="hero__trust">Trusted by <strong>100+ businesses</strong></p>
+    </div>
+  </section>
+
+  <!-- BRAND LOGOS TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <div class="ticker__track">
+        <!-- Logo placeholders repeated for infinite scroll -->
+        <span class="logo-item">LOCOO</span>
+        <span class="logo-item logo-icon">∞</span>
+        <span class="logo-item">∞∞</span>
+        <span class="logo-item">ℕ</span>
+        <span class="logo-item">IIIII</span>
+        <span class="logo-item logo-icon">◇</span>
+        <span class="logo-item">LOCOO</span>
+        <span class="logo-item logo-icon">∞</span>
+        <span class="logo-item">∞∞</span>
+        <span class="logo-item">ℕ</span>
+        <span class="logo-item">IIIII</span>
+        <span class="logo-item logo-icon">◇</span>
+        <!-- Duplicate for seamless loop -->
+        <span class="logo-item">LOCOO</span>
+        <span class="logo-item logo-icon">∞</span>
+        <span class="logo-item">∞∞</span>
+        <span class="logo-item">ℕ</span>
+        <span class="logo-item">IIIII</span>
+        <span class="logo-item logo-icon">◇</span>
+        <span class="logo-item">LOCOO</span>
+        <span class="logo-item logo-icon">∞</span>
+        <span class="logo-item">∞∞</span>
+        <span class="logo-item">ℕ</span>
+        <span class="logo-item">IIIII</span>
+        <span class="logo-item logo-icon">◇</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUOTE SECTION -->
+  <section class="quote-section">
+    <div class="quote-author">
+      <p class="quote-author__name">Betül Alkan</p>
+      <p class="quote-author__role">Professional photographer</p>
+    </div>
+    <blockquote class="quote-text">
+      <span class="quote-mark">"</span>I don't just take photos Betül raw emotions, subtle moments, and untold stories that make life beautiful.<span class="quote-mark">"</span>
+    </blockquote>
+  </section>
+
+  </div><!-- /panel 0 -->
+
+  <!-- PANEL 1: ABOUT ME -->
+  <div class="panel" data-panel="1">
+    <div class="about">
+      <div class="about__left">
+        <span class="section-label">— 01 / About Me</span>
+        <h2 class="about__title">Behind<br />the lens.</h2>
+        <p class="about__bio">I'm a professional photographer based in Istanbul, specializing in capturing authentic human moments. With over a decade of experience, I've worked with brands, families, and artists across the world.</p>
+        <p class="about__bio about__bio--second">My approach is simple: patience, presence, and a deep respect for the story unfolding in front of me.</p>
+        <div class="about__stats">
+          <div class="about__stat">
+            <span class="about__stat-num">10+</span>
+            <span class="about__stat-label">Years of experience</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num">500+</span>
+            <span class="about__stat-label">Projects completed</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num">30+</span>
+            <span class="about__stat-label">Countries visited</span>
+          </div>
+        </div>
+      </div>
+      <div class="about__right">
+        <div class="about__img-wrap">
+          <img src="images/about-photo.jpg" alt="About" onerror="this.style.display='none'" />
+          <div class="about__img-fallback">about&#8209;photo.jpg</div>
+          <div class="about__img-tag">© Betül Alkan</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /panel 1 -->
+
+  <!-- PANEL 2: WORK -->
+  <div class="panel" data-panel="2">
+    <div class="work">
+      <div class="work__header">
+        <div class="work__header-left">
+          <span class="section-label section-label--light">— 02 / Work</span>
+          <h2 class="work__title">Selected<br />projects.</h2>
+        </div>
+        <div class="work__header-right">
+          <div class="work__drag-hint" id="workDragHint">
+            <svg width="48" height="12" viewBox="0 0 48 12" fill="none">
+              <path d="M0 6h40M34 1l6 5-6 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>drag to explore</span>
+            <svg width="48" height="12" viewBox="0 0 48 12" fill="none" style="transform:scaleX(-1)">
+              <path d="M0 6h40M34 1l6 5-6 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="work__counter">
+            <span id="workCurrent">01</span>
+            <span class="work__counter-line"></span>
+            <span id="workTotal">--</span>
+          </div>
+        </div>
+      </div>
+      <div class="work__belt-wrap" id="workBeltWrap">
+        <div class="work__belt" id="workBelt">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div><!-- /panel 2 -->
+
+  <!-- PANEL 3: CONTACT -->
+  <div class="panel" data-panel="3">
+    <div class="contact">
+      <div class="contact__left">
+        <span class="section-label">— 03 / Contact</span>
+        <h2 class="contact__title">Let's create something<br /><em>unforgettable.</em></h2>
+        <p class="contact__sub">Available for commissions, collaborations, and editorial projects worldwide.</p>
+        <div class="contact__links">
+          <a href="mailto:betulalkan98@gmail.com" class="contact__link">betulalkan98@gmail.com</a>
+          <a href="#" class="contact__link">Instagram</a>
+          <a href="#" class="contact__link">Behance</a>
+        </div>
+        <div class="contact__footer">
+          <span>© 2025 Betül®</span>
+          <span>Istanbul, Turkey</span>
+        </div>
+      </div>
+      <div class="contact__right">
+        <form class="contact__form" onsubmit="return false">
+          <div class="form-group">
+            <label>Your name</label>
+            <input type="text" placeholder="Betül Alkan" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="hello@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea placeholder="Tell me about your project…" rows="4"></textarea>
+          </div>
+          <button class="contact__submit" type="submit">Send message →</button>
+        </form>
+      </div>
+    </div>
+  </div><!-- /panel 3 -->
+
+  <script src="script.js"></script>
+</body>
+</html>

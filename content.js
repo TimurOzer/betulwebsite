@@ -33,11 +33,43 @@ var SITE_CONTENT = {
         { num: "100%",  label: "Creative Energy" }
       ]	  
     },
-    work: {
-      label: "— 02 / Work",
-      title: "Selected<br />creations.",
-      dragHint: "drag to explore"
-    },
+	work: {
+	  label: "— 02 / Work",
+	  title: "Selected<br />creations.",
+	  dragHint: "drag to explore",
+	  projects: [
+		{
+		  file: "work_belt_01.jpg",
+		  title: "Brand Identity System",
+		  desc: "A cohesive visual language designed for a modern fashion label — from logo to packaging, capturing elegance with raw, editorial edge."
+		},
+		{
+		  file: "work_belt_02.jpg",
+		  title: "Editorial Portrait Series",
+		  desc: "Natural light and bold shadows shape this intimate portrait collection, blurring the line between fine art and documentary."
+		},
+		{
+		  file: "work_belt_03.jpg",
+		  title: "Product Catalogue Design",
+		  desc: "Minimalist layout meets crisp product photography. Every page is crafted to let the objects breathe and speak for themselves."
+		},
+		{
+		  file: "work_belt_04.jpg",
+		  title: "Social Media Campaign",
+		  desc: "A high-energy, color-driven campaign built to stop the scroll. Motion, typography, and punchy visuals work as one."
+		},
+		{
+		  file: "work_belt_05.jpg",
+		  title: "UI/UX Interface Concept",
+		  desc: "Clean, accessible, and user-focused — a mobile app design that balances aesthetic pleasure with frictionless interaction."
+		},
+		{
+		  file: "work_belt_06.jpg",
+		  title: "Typographic Poster Series",
+		  desc: "Bold letterforms take center stage in this experimental series, playing with contrast, rhythm, and negative space."
+		}
+	  ]
+	},
     contact: {
       label: "— 03 / Contact",
       title: "Let's build something<br /><em>extraordinary.</em>",
@@ -93,11 +125,43 @@ var SITE_CONTENT = {
         { num: "100%",  label: "Yaratıcı Enerji"   }
       ]
     },
-    work: {
-      label: "— 02 / Çalışmalar",
-      title: "Seçilmiş<br />projeler.",
-      dragHint: "keşfetmek için sürükle"
-    },
+	work: {
+	  label: "— 02 / Çalışmalar",
+	  title: "Seçilmiş<br />projeler.",
+	  dragHint: "keşfetmek için sürükle",
+	  projects: [
+		{
+		  file: "work_belt_01.jpg",
+		  title: "Marka Kimliği Sistemi",
+		  desc: "Modern bir moda markası için bütünsel görsel dil — logodan ambalaja, ham ve editoryal bir zarafet yaklaşımı."
+		},
+		{
+		  file: "work_belt_02.jpg",
+		  title: "Editoryal Portre Serisi",
+		  desc: "Doğal ışık ve cesur gölgelerle örülmüş, samimi portreler; sanatsal ifadeyle belgesel arasındaki sınırı bulanıklaştırıyor."
+		},
+		{
+		  file: "work_belt_03.jpg",
+		  title: "Ürün Kataloğu Tasarımı",
+		  desc: "Minimalist sayfa düzeni ve keskin ürün fotoğrafçılığı. Her sayfa, objelerin nefes alması için özenle kurgulandı."
+		},
+		{
+		  file: "work_belt_04.jpg",
+		  title: "Sosyal Medya Kampanyası",
+		  desc: "Durdurulamayan bir enerjiyle kurgulanmış, renk odaklı kampanya. Hareket, tipografi ve çarpıcı görseller bir arada."
+		},
+		{
+		  file: "work_belt_05.jpg",
+		  title: "Arayüz Tasarım Konsepti",
+		  desc: "Temiz, erişilebilir ve kullanıcı odaklı — estetik hazzı zahmetsiz etkileşimle dengeleyen bir mobil uygulama tasarımı."
+		},
+		{
+		  file: "work_belt_06.jpg",
+		  title: "Tipografik Poster Serisi",
+		  desc: "Deneysel bir seride harf formları başrolde; kontrast, ritim ve boşluğun gücüyle oynayan cesur kompozisyonlar."
+		}
+	  ]
+	},
     contact: {
       label: "— 03 / İletişim",
       title: "Birlikte olağanüstü bir şey<br /><em>yaratalım.</em>",

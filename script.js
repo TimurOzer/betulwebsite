@@ -197,38 +197,160 @@ let triggerWorkFilter = null;
       });
     }
 
-    // Lightbox
-    function openLightbox(imageSrc) {
-      const overlay = document.createElement('div');
-      Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        backgroundColor: 'rgba(0,0,0,0.92)', zIndex: '9999',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        opacity: '0', transition: 'opacity 0.3s ease', cursor: 'zoom-out'
-      });
-      
-      const img = document.createElement('img');
-      img.src = imageSrc;
-      Object.assign(img.style, {
-        maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain',
-        borderRadius: '8px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-        transform: 'scale(0.95)', transition: 'transform 0.3s ease'
-      });
-      
-      overlay.appendChild(img);
-      document.body.appendChild(overlay);
-      
-      requestAnimationFrame(() => {
-        overlay.style.opacity = '1';
-        img.style.transform = 'scale(1)';
-      });
-      
-      overlay.addEventListener('click', () => {
-        overlay.style.opacity = '0';
-        img.style.transform = 'scale(0.95)';
-        setTimeout(() => overlay.remove(), 300);
-      });
-    }
+	// Proje detay paneli
+	function openProjectDetail(imageSrc) {
+	  const filename = imageSrc.split('/').pop();
+	  const lang = currentLang;
+	  const projects = SITE_CONTENT[lang]?.work?.projects || [];
+	  const project = projects.find(p => p.file === filename) || {
+		title: filename,
+		desc: '',
+		tools: WORK_TOOLS[filename] || []
+	  };
+	  const tools = WORK_TOOLS[filename] || [];
+
+	  // Overlay
+	  const overlay = document.createElement('div');
+	  overlay.className = 'project-detail-overlay';
+	  Object.assign(overlay.style, {
+		position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+		backgroundColor: 'rgba(0,0,0,0.92)', zIndex: '9999',
+		display: 'flex', alignItems: 'center', justifyContent: 'center',
+		opacity: '0', transition: 'opacity 0.3s ease',
+		padding: '40px'
+	  });
+
+	  // Kart
+	  const card = document.createElement('div');
+	  card.className = 'project-detail-card';
+	  Object.assign(card.style, {
+		display: 'flex', maxWidth: '1100px', width: '100%', maxHeight: '85vh',
+		backgroundColor: '#111', borderRadius: '16px', overflow: 'hidden',
+		boxShadow: '0 30px 80px rgba(0,0,0,0.7)',
+		transform: 'scale(0.95)', transition: 'transform 0.3s ease',
+		flexDirection: 'row'
+	  });
+
+	  // Sol: Görsel
+	  const imgWrap = document.createElement('div');
+	  imgWrap.className = 'project-detail-img';
+	  Object.assign(imgWrap.style, {
+		flex: '1 1 55%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+		background: '#000', minHeight: '400px', position: 'relative', overflow: 'hidden'
+	  });
+	  const img = document.createElement('img');
+	  img.src = imageSrc;
+	  Object.assign(img.style, {
+		width: '100%', height: '100%', objectFit: 'contain', display: 'block'
+	  });
+	  imgWrap.appendChild(img);
+
+	  // Sağ: Bilgi
+	  const info = document.createElement('div');
+	  info.className = 'project-detail-info';
+	  Object.assign(info.style, {
+		flex: '1 1 45%', padding: '48px 40px', display: 'flex', flexDirection: 'column',
+		justifyContent: 'center', color: '#fff', overflowY: 'auto'
+	  });
+
+	  // Başlık
+	  const title = document.createElement('h3');
+	  title.textContent = project.title;
+	  Object.assign(title.style, {
+		fontFamily: 'Syne, sans-serif', fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
+		fontWeight: '800', letterSpacing: '-0.03em', lineHeight: '1.1', marginBottom: '24px'
+	  });
+	  info.appendChild(title);
+
+	  // Açıklama
+	  if (project.desc) {
+		const desc = document.createElement('p');
+		desc.textContent = project.desc;
+		Object.assign(desc.style, {
+		  fontSize: '0.95rem', lineHeight: '1.7', color: 'rgba(255,255,255,0.7)',
+		  fontWeight: '300', marginBottom: '32px', maxWidth: '90%'
+		});
+		info.appendChild(desc);
+	  }
+
+	  // Araçlar
+	  if (tools.length) {
+		const toolsLabel = document.createElement('span');
+		toolsLabel.textContent = currentLang === 'tr' ? 'Kullanılan Araçlar' : 'Tools Used';
+		Object.assign(toolsLabel.style, {
+		  fontSize: '0.7rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)',
+		  textTransform: 'uppercase', marginBottom: '12px', display: 'block'
+		});
+		info.appendChild(toolsLabel);
+		const toolsRow = document.createElement('div');
+		toolsRow.style.display = 'flex'; toolsRow.style.gap = '12px'; toolsRow.style.flexWrap = 'wrap';
+		tools.forEach(t => {
+		  const badge = document.createElement('div');
+		  Object.assign(badge.style, {
+			width: '40px', height: '40px', background: 'rgba(255,255,255,0.08)',
+			borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+			padding: '6px'
+		  });
+		  const icon = document.createElement('img');
+		  icon.src = TOOL_LOGOS[t.toLowerCase()];
+		  icon.alt = t;
+		  icon.style.width = '100%'; icon.style.height = '100%'; icon.style.objectFit = 'contain';
+		  badge.appendChild(icon);
+		  toolsRow.appendChild(badge);
+		});
+		info.appendChild(toolsRow);
+	  }
+
+	  // Kapat düğmesi
+	  const closeBtn = document.createElement('button');
+	  closeBtn.textContent = '✕';
+	  Object.assign(closeBtn.style, {
+		position: 'absolute', top: '16px', right: '16px',
+		background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff',
+		width: '36px', height: '36px', borderRadius: '50%', fontSize: '1.2rem',
+		cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+		transition: 'background 0.2s', zIndex: '2'
+	  });
+	  closeBtn.onmouseenter = () => closeBtn.style.background = 'rgba(255,255,255,0.2)';
+	  closeBtn.onmouseleave = () => closeBtn.style.background = 'rgba(255,255,255,0.08)';
+
+	  // Overlay'e kapatma olayı
+	  overlay.addEventListener('click', (e) => {
+		if (e.target === overlay) {
+		  overlay.style.opacity = '0';
+		  card.style.transform = 'scale(0.95)';
+		  setTimeout(() => overlay.remove(), 300);
+		}
+	  });
+	  closeBtn.addEventListener('click', () => {
+		overlay.style.opacity = '0';
+		card.style.transform = 'scale(0.95)';
+		setTimeout(() => overlay.remove(), 300);
+	  });
+
+	  // ESC ile kapat
+	  const escHandler = (e) => {
+		if (e.key === 'Escape') {
+		  overlay.style.opacity = '0';
+		  card.style.transform = 'scale(0.95)';
+		  setTimeout(() => overlay.remove(), 300);
+		  window.removeEventListener('keydown', escHandler);
+		}
+	  };
+	  window.addEventListener('keydown', escHandler);
+
+	  card.appendChild(imgWrap);
+	  card.appendChild(info);
+	  card.style.position = 'relative';
+	  card.appendChild(closeBtn);
+	  overlay.appendChild(card);
+	  document.body.appendChild(overlay);
+
+	  requestAnimationFrame(() => {
+		overlay.style.opacity = '1';
+		card.style.transform = 'scale(1)';
+	  });
+	}
 
     function makeCard(src, idx, tool) {
       const card = document.createElement('div');
@@ -273,11 +395,11 @@ let triggerWorkFilter = null;
 
       let startX, startY;
       card.addEventListener('pointerdown', e => { startX = e.clientX; startY = e.clientY; });
-      card.addEventListener('pointerup', e => {
-        const diffX = Math.abs(e.clientX - startX);
-        const diffY = Math.abs(e.clientY - startY);
-        if (diffX < 5 && diffY < 5) openLightbox(src);
-      });
+		card.addEventListener('pointerup', e => {
+		  const diffX = Math.abs(e.clientX - startX);
+		  const diffY = Math.abs(e.clientY - startY);
+		  if (diffX < 5 && diffY < 5) openProjectDetail(src);
+		});
 
       return card;
     }

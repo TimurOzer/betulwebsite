@@ -605,25 +605,32 @@ body {
 @media (hover: hover) {
   body { cursor: none; }
 
-  .custom-cursor {
-    position: fixed;
-    top: 0; left: 0;
-    width: 10px;
-    height: 10px;
-    background: var(--c-dark);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.15s ease, width 0.2s, height 0.2s, background 0.2s;
-    transform: translate(-50%, -50%);
-  }
+	.custom-cursor {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  width: 12px;
+	  height: 12px;
+	  background: #0d0d0d;                 /* içi koyu */
+	  border: 2px solid rgba(255,255,255,0.9); /* dış çeper açık */
+	  border-radius: 50%;
+	  pointer-events: none;
+	  z-index: 10000;
+	  transform: translate(-50%, -50%);
+	  transition: transform 0.15s ease,
+				  width 0.2s, height 0.2s,
+				  background 0.2s,
+				  border-color 0.2s;
+	  box-shadow: 0 0 0 2px rgba(0,0,0,0.15); /* hafif gölge, her zeminde kenarı belli olsun */
+	}
 
-  .custom-cursor.hover {
-    width: 36px;
-    height: 36px;
-    background: transparent;
-    border: 1.5px solid var(--c-dark);
-  }
+	.custom-cursor.hover {
+	  width: 40px;
+	  height: 40px;
+	  background: transparent;
+	  border: 2px solid rgba(255,255,255,0.9);
+	  box-shadow: 0 0 0 4px rgba(0,0,0,0.2);
+	}
 
   a, button { cursor: none; }
 }
@@ -1258,4 +1265,19 @@ body.panels-ready {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   opacity: 0.8;
+}
+
+/* Proje detay paneli mobil */
+@media (max-width: 768px) {
+  .project-detail-card {
+    flex-direction: column !important;
+  }
+  .project-detail-img {
+    min-height: 250px !important;
+    flex: none !important;
+    height: 40vh;
+  }
+  .project-detail-info {
+    padding: 28px 24px !important;
+  }
 }

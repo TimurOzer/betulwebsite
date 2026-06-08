@@ -1,676 +1,779 @@
-/* ─────────────────────────────────────────
-   CAPTURE® — script.js
-───────────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   Betül Alkan — Portfolio  |  script.js
+═══════════════════════════════════════════════ */
 
-(() => {
+'use strict';
 
-  /* ── Panel system ──────────────────── */
-  const panels    = document.querySelectorAll('.panel');
-  const navLinks  = document.querySelectorAll('.nav-link');
-  const TOTAL     = panels.length;
-  let current     = 0;
-  let isAnimating = false;
-  let currentLang = 'en';
-  const ANIM_MS   = 900;
-  
+/* ── URL-safe path helper ─────────────────── */
+function p(path) {
+  return path.split('/').map(encodeURIComponent).join('/');
+}
+
+/* ── Project Data ──────────────────────────── */
+const PROJECTS = [
+  {
+    id: 1,
+    title: 'Pigmentia — Website Design',
+    titleTR: 'Pigmentia — Web Tasarımı',
+    category: 'ux',
+    categoryLabel: 'UI/UX',
+    categoryLabelTR: 'Arayüz Tasarımı',
+    gradient: 'linear-gradient(135deg, #0e0022 0%, #1c0045 100%)',
+    cover: p('PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155838.png'),
+    images: [
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155838.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155917.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155933.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160015.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160031.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160044.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160104.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160128.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160140.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160149.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160158.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160211.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160222.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160247.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160304.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160357.png',
+      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160408.png',
+    ].map(p),
+    tools: ['adobe xd', 'figma'],
+    desc: 'A complete website design for Pigmentia — a modern color exploration and palette generation platform. Built user-first: clean navigation, accessible contrast tools, and a cohesive design system that balances aesthetic beauty with frictionless interaction.',
+    descTR: 'Pigmentia için kapsamlı web sitesi tasarımı — modern renk keşif ve palet üretim platformu. Kullanıcı odaklı: temiz navigasyon, erişilebilir kontrast araçları ve estetik güzelliği sorunsuz etkileşimle dengeleyen tutarlı bir tasarım sistemi.',
+    year: '2026'
+  },
+  {
+    id: 2,
+    title: 'Nox — Website Design',
+    titleTR: 'Nox — Web Tasarımı',
+    category: 'ux',
+    categoryLabel: 'UI/UX',
+    categoryLabelTR: 'Arayüz Tasarımı',
+    gradient: 'linear-gradient(135deg, #080010 0%, #12001f 100%)',
+    cover: p('PROJELER/nox/1.png'),
+    images: [
+      'PROJELER/nox/1.png',
+      'PROJELER/nox/2.png',
+      'PROJELER/nox/3.png',
+      'PROJELER/nox/4.png',
+      'PROJELER/nox/5.png',
+      'PROJELER/nox/6.png',
+      'PROJELER/nox/7.png',
+      'PROJELER/nox/8.png',
+      'PROJELER/nox/9.png',
+      'PROJELER/nox/10.png',
+      'PROJELER/nox/11.png',
+    ].map(p),
+    tools: ['figma', 'adobe xd'],
+    desc: 'A dark, immersive website design for Nox — a bold visual identity brought to life through deep contrast, refined typography, and a meticulously layered UI. Every screen was designed to evoke atmosphere while maintaining clear usability.',
+    descTR: 'Nox için koyu, sürükleyici bir web sitesi tasarımı — güçlü bir görsel kimlik, derin kontrast, rafine tipografi ve katmanlı bir arayüzle hayata geçirildi. Her ekran, net kullanılabilirliği korurken atmosfer yaratmak için tasarlandı.',
+    year: '2025'
+  },
+  {
+    id: 3,
+    title: 'Catch — Game UI Design',
+    titleTR: 'Catch — Oyun Arayüzü Tasarımı',
+    category: 'ux',
+    categoryLabel: 'UI/UX',
+    categoryLabelTR: 'Arayüz Tasarımı',
+    gradient: 'linear-gradient(135deg, #001a10 0%, #002818 100%)',
+    cover: p('PROJELER/catch oyun/menu.png'),
+    images: [
+      'PROJELER/catch oyun/menu.png',
+      'PROJELER/catch oyun/1.png',
+      'PROJELER/catch oyun/2.png',
+      'PROJELER/catch oyun/3.png',
+      'PROJELER/catch oyun/4.png',
+      'PROJELER/catch oyun/5.png',
+    ].map(p),
+    tools: ['adobe xd', 'illustrator'],
+    desc: 'Full UI design for Catch — a mobile game experience including main menu, HUD, level screens, and end states. The interface was crafted to feel intuitive and energetic, keeping players engaged with clear visual feedback at every moment.',
+    descTR: 'Catch için tam UI tasarımı — ana menü, HUD, level ekranları ve bitiş ekranları dahil mobil oyun arayüzü. Arayüz, her an net görsel geri bildirimle oyuncuları bağlı tutan sezgisel ve enerjik bir his verecek şekilde tasarlandı.',
+    year: '2025'
+  },
+  {
+    id: 4,
+    title: 'İGÜ Obis — UI Redesign',
+    titleTR: 'İGÜ Obis — Arayüz Yenileme',
+    category: 'ux',
+    categoryLabel: 'UI/UX',
+    categoryLabelTR: 'Arayüz Tasarımı',
+    gradient: 'linear-gradient(135deg, #001830 0%, #002448 100%)',
+    cover: p('PROJELER/igü obis/Ekran görüntüsü 2026-06-08 153721.png'),
+    images: [
+      'PROJELER/igü obis/Ekran görüntüsü 2026-06-08 153721.png',
+      'PROJELER/igü obis/png.png',
+    ].map(p),
+    tools: ['figma'],
+    desc: 'A modern redesign of Istanbul Gelişim University\'s OBIS student portal. The goal was to simplify complex academic workflows into a clean, accessible interface — reducing friction for students navigating course registrations, grades, and schedules.',
+    descTR: 'İstanbul Gelişim Üniversitesi\'nin OBIS öğrenci portalının modern yeniden tasarımı. Amaç, karmaşık akademik süreçleri temiz ve erişilebilir bir arayüze dönüştürmek — ders kayıt, not ve program takibinde öğrencilerin yaşadığı zorluğu azaltmak.',
+    year: '2026'
+  },
+  {
+    id: 5,
+    title: 'Pet Grooming — Brand Identity',
+    titleTR: 'Pet Grooming — Marka Kimliği',
+    category: 'branding',
+    categoryLabel: 'Branding',
+    categoryLabelTR: 'Marka Tasarımı',
+    gradient: 'linear-gradient(135deg, #1a0800 0%, #2e1200 100%)',
+    cover: p('PROJELER/Petgrooming/pet-grooming-logo.jpg'),
+    images: [
+      'PROJELER/Petgrooming/pet-grooming-logo.jpg',
+      'PROJELER/Petgrooming/pet-grooming-post.jpg',
+      'PROJELER/Petgrooming/pet-grooming-canta.jpg',
+      'PROJELER/Petgrooming/pet-grooming-canta2.jpg',
+      'PROJELER/Petgrooming/pet-grooming-cepli-dosya.jpg',
+    ].map(p),
+    tools: ['illustrator', 'photoshop'],
+    desc: 'A full brand identity system for a pet grooming business — logo design, social media posts, branded tote bag, and stationery. Warm, trustworthy, and playful tones communicate care and professionalism in equal measure.',
+    descTR: 'Bir evcil hayvan bakım işletmesi için kapsamlı marka kimliği sistemi — logo tasarımı, sosyal medya paylaşımları, markalı çanta ve kırtasiye. Sıcak ve güvenilir tonlar, özen ve profesyonelliği eşit ölçüde iletmektedir.',
+    year: '2025'
+  },
+  {
+    id: 6,
+    title: 'Olebaby — Brand Identity',
+    titleTR: 'Olebaby — Marka Kimliği',
+    category: 'branding',
+    categoryLabel: 'Branding',
+    categoryLabelTR: 'Marka Tasarımı',
+    gradient: 'linear-gradient(135deg, #1a1000 0%, #2e1e00 100%)',
+    cover: p('PROJELER/Olebaby/ole_kartvizit.png'),
+    images: [
+      'PROJELER/Olebaby/ole_kartvizit.png',
+      'PROJELER/Olebaby/antetli_kagit.png',
+    ].map(p),
+    tools: ['illustrator'],
+    desc: 'Brand identity design for Olebaby — business card and letterhead crafted with a clean, modern aesthetic. Typography and layout choices reflect the brand\'s character: approachable, refined, and memorable.',
+    descTR: 'Olebaby için marka kimliği tasarımı — kartvizit ve antetli kağıt, temiz ve modern bir estetikle hazırlandı. Tipografi ve düzen seçimleri markanın karakterini yansıtıyor: ulaşılabilir, şık ve akılda kalıcı.',
+    year: '2025'
+  },
+  {
+    id: 7,
+    title: 'Social Awareness Posters',
+    titleTR: 'Sosyal Farkındalık Afişleri',
+    category: 'print',
+    categoryLabel: 'Print',
+    categoryLabelTR: 'Baskı Tasarımı',
+    gradient: 'linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%)',
+    cover: p('PROJELER/poster/Betul_Alkan_Afis.jpg'),
+    images: [
+      'PROJELER/poster/Betul_Alkan_Afis.jpg',
+      'PROJELER/poster/mikroplastiklerafisi_eng.jpg',
+      'PROJELER/poster/sosyal-sorumluluk-afisi.jpg',
+      'PROJELER/poster/whatunitesusposter.jpg',
+    ].map(p),
+    tools: ['illustrator', 'photoshop'],
+    desc: 'A series of social responsibility and environmental awareness posters exploring themes of microplastics, unity, and civic consciousness. Bold composition, strong typography, and purposeful color choices give each poster a voice that commands attention.',
+    descTR: 'Mikroplastikler, birlik ve toplumsal farkındalık temalarını keşfeden sosyal sorumluluk ve çevre bilinci afiş serisi. Güçlü kompozisyon, belirgin tipografi ve bilinçli renk tercihleri her afişe dikkat çeken bir ses kazandırıyor.',
+    year: '2025'
+  },
+  {
+    id: 8,
+    title: 'After Effects Animation',
+    titleTR: 'After Effects Animasyonu',
+    category: 'motion',
+    categoryLabel: 'Motion',
+    categoryLabelTR: 'Animasyon',
+    gradient: 'linear-gradient(135deg, #000a1a 0%, #001430 100%)',
+    cover: null,
+    images: [],
+    video: p('PROJELER/after effects animasyon/art-contact.mp4'),
+    tools: ['after effects', 'premiere'],
+    desc: 'A motion graphics piece produced in After Effects — fluid transitions, kinetic typography, and layered visual storytelling. Every frame was animated with precision to create a dynamic, engaging experience.',
+    descTR: 'After Effects\'te üretilen motion graphics çalışması — akıcı geçişler, kinetik tipografi ve katmanlı görsel anlatım. Her kare, dinamik ve ilgi çekici bir deneyim yaratmak için hassasiyetle animasyona alındı.',
+    year: '2025'
+  }
+];
+
 const TOOL_LOGOS = {
-  'lightroom':      'images/logo-lightroom.png',
-  'photoshop':      'images/logo-photoshop.png',
-  'illustrator':    'images/logo-illustrator.png',
-  'adobe xd':       'images/logo-adobe-xd.png',
-  'premiere':       'images/logo-premiere.png',
-  'after effects':  'images/logo-after-effects.png',
-  'figma':          'images/logo-figma.png',
-  'capture one':    'images/logo-capture-one.png',
-  'davinci':        'images/logo-davinci.png',
+  'lightroom':     'images/logo-lightroom.png',
+  'photoshop':     'images/logo-photoshop.png',
+  'illustrator':   'images/logo-illustrator.png',
+  'adobe xd':      'images/logo-adobe-xd.png',
+  'premiere':      'images/logo-premiere.png',
+  'after effects': 'images/logo-after-effects.png',
+  'figma':         'images/logo-figma.png',
 };
 
-// Hangi fotoğrafta hangi araç? (index 0 = work_belt_01)
-const WORK_TOOLS = {
-  'work_belt_01.jpg': ['illustrator'],
-  'work_belt_02.jpg': ['illustrator', 'photoshop'],
-  'work_belt_03.jpg': ['illustrator', 'photoshop'],
-  'work_belt_04.jpg': ['illustrator'],
-  'work_belt_05.jpg': ['adobe xd'],
-  'work_belt_06.jpg': ['illustrator']
+const TOOL_NAMES = {
+  'lightroom':     'Adobe Lightroom',
+  'photoshop':     'Adobe Photoshop',
+  'illustrator':   'Adobe Illustrator',
+  'adobe xd':      'Adobe XD',
+  'premiere':      'Adobe Premiere Pro',
+  'after effects': 'Adobe After Effects',
+  'figma':         'Figma',
 };
 
-const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma'];
+const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma', 'lightroom'];
 
-// ⭐ Bu değişken burada tanımlanacak (başka yerde değil!)
-let triggerWorkFilter = null;
+/* ── Tool → projects mapping ──────────────── */
+const TOOL_CATEGORIES = {
+  'illustrator':   ['branding', 'print'],
+  'photoshop':     ['branding', 'print'],
+  'adobe xd':      ['ux'],
+  'figma':         ['ux'],
+  'premiere':      ['motion'],
+  'after effects': ['motion'],
+  'lightroom':     ['print'],
+};
 
-  function goTo(index) {
-    if (index === current || isAnimating) return;
-    if (index < 0 || index >= TOTAL) return;
-    isAnimating = true;
-    current = index;
+/* ── State ─────────────────────────────────── */
+let currentLang      = 'en';
+let activeFilter     = 'all';
+let activeToolFilter = null;
+let modalImgIndex    = 0;
+let modalImages      = [];
 
-    panels.forEach((p, i) => {
-      p.classList.remove('is-active', 'is-above');
-      if (i < current) p.classList.add('is-above');
-      else if (i === current) p.classList.add('is-active');
-    });
+/* ── Helpers ───────────────────────────────── */
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-    navLinks.forEach(l =>
-      l.classList.toggle('active', +l.dataset.panel === current)
-    );
+/* ══════════════════════════════════════════════
+   LANGUAGE
+══════════════════════════════════════════════ */
+function applyLang(lang) {
+  currentLang = lang;
 
-    setTimeout(() => { isAnimating = false; }, ANIM_MS);
-  }
-
-  function initPanels() {
-    document.body.classList.add('panels-ready');
-    panels[0].classList.add('is-active');
-    if (navLinks[0]) navLinks[0].classList.add('active');
-
-    let wheelAccum = 0, wheelTimer;
-
-    window.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      if (isAnimating) return;
-      wheelAccum += e.deltaY;
-      clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => { wheelAccum = 0; }, 200);
-      if (wheelAccum >  60) { goTo(current + 1); wheelAccum = 0; }
-      if (wheelAccum < -60) { goTo(current - 1); wheelAccum = 0; }
-    }, { passive: false });
-
-    let touchY = 0;
-    window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
-    window.addEventListener('touchend', e => {
-      if (isAnimating) return;
-      const d = touchY - e.changedTouches[0].clientY;
-      if (Math.abs(d) > 50) goTo(d > 0 ? current + 1 : current - 1);
-    }, { passive: true });
-
-    window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') goTo(current + 1);
-      if (e.key === 'ArrowUp'   || e.key === 'PageUp')   goTo(current - 1);
-    });
-
-    navLinks.forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        goTo(+link.dataset.panel);
-        burgerBtn.classList.remove('open');
-        mobileMenu.classList.remove('active');
-      });
-    });
-  }
-
-  initPanels();
-
-  /* ── Burger menu ───────────────────── */
-  const burgerBtn  = document.getElementById('burgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  burgerBtn.addEventListener('click', () => {
-    burgerBtn.classList.toggle('open');
-    mobileMenu.classList.toggle('active');
+  $$('[data-en]').forEach(el => {
+    const text = el.dataset[lang];
+    if (text === undefined) return;
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = text;
+    } else {
+      el.innerHTML = text;
+    }
   });
 
-  /* ── Work Belt ─────────────────────── */
-  async function initBelt() {
-    const wrap    = document.getElementById('workBeltWrap');
-    const belt    = document.getElementById('workBelt');
-    const elCur   = document.getElementById('workCurrent');
-    const elTotal = document.getElementById('workTotal');
-    const hint    = document.getElementById('workDragHint');
-    if (!wrap || !belt) return;
+  $$('.filter-btn').forEach(btn => {
+    const text = btn.dataset[lang];
+    if (text) btn.textContent = text;
+  });
 
-    const MAX_PROBE = 6;
-    const found = [];
+  const mobileCv = $('.mobile-cv');
+  if (mobileCv) mobileCv.textContent = lang === 'tr' ? 'CV İndir ↓' : 'Download CV ↓';
 
-    await Promise.all(
-      Array.from({ length: MAX_PROBE }, (_, i) => {
-        const n    = String(i + 1).padStart(2, '0');
-        const src  = `images/work_belt_${n}.jpg`;
-        return new Promise(res => {
-          const img  = new Image();
-          img.onload  = () => { found[i] = src; res(); };
-          img.onerror = () => res();
-          img.src = src;
-        });
-      })
-    );
+  renderProjects(activeFilter, activeToolFilter);
 
-    const images = found.filter(Boolean);
-    const count  = images.length;
+  const btn = $('#langBtn');
+  if (btn) btn.textContent = lang === 'en' ? 'TR' : 'EN';
+}
 
-    if (elTotal) elTotal.textContent = String(count || 0).padStart(2, '0');
+/* ══════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════ */
+function initNav() {
+  const nav = $('#nav');
 
-    let currentFilter = null;
-	let activeImages = []; // YENİ EKLENEN SATIR
-	function getFilteredImages(filter) {
-	  if (!filter) return images;
-	  return images.filter((src) => {
-		const filename = src.split('/').pop(); // Sadece dosya adını alır (örn: work_belt_02.jpg)
-		const tools = WORK_TOOLS[filename] || [];
-		return tools.map(t => t.toLowerCase()).includes(filter);
-	  });
-	}
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-    // ⭐ applyFilter fonksiyonu burada tanımlanıyor
-    function applyFilter(toolKey) {
-      buildBeltCards(toolKey);
-      if (filterBar) {
-        filterBar.classList.add('active');
-        if (filterLabel) filterLabel.textContent = toolKey.toUpperCase();
-      }
-      goTo(2);
-    }
+  const sections  = $$('section[id]');
+  const navLinks  = $$('.nav-link');
 
-    // ⭐ Köprüyü hemen bağla
-    triggerWorkFilter = applyFilter;
-
-	function buildBeltCards(filter) {
-	  belt.innerHTML = '';
-	  currentFilter = filter;
-	  activeImages = getFilteredImages(filter);
-	  const count = activeImages.length;
-
-	  if (elTotal) elTotal.textContent = String(count).padStart(2, '0');
-
-	  // EĞER 4 veya daha azsa tek set, 4'ten fazlaysa sonsuz döngü için 3 set oluştur
-	  const sets = count <= 4 ? [activeImages] : [activeImages, activeImages, activeImages];
-
-	  sets.forEach((set, setIdx) => {
-		set.forEach((src, i) => {
-		  const filename = src.split('/').pop();
-		  const tool = WORK_TOOLS[filename] || [];
-		  belt.appendChild(makeCard(src, setIdx * activeImages.length + i, tool));
-		});
-	  });
-
-	  requestAnimationFrame(() => requestAnimationFrame(initOffset));
-	}
-
-    const filterBar   = document.getElementById('workFilterBar');
-    const filterLabel = document.getElementById('workFilterLabel');
-    const filterClear = document.getElementById('workFilterClear');
-
-    if (filterClear) {
-      filterClear.addEventListener('click', () => {
-        buildBeltCards(null);
-        filterBar.classList.remove('active');
-        document.querySelectorAll('.about__tool-btn').forEach(b => b.classList.remove('active'));
-      });
-    }
-
-	// Proje detay paneli
-	function openProjectDetail(imageSrc) {
-	  const filename = imageSrc.split('/').pop();
-	  const lang = currentLang;
-	  const projects = SITE_CONTENT[lang]?.work?.projects || [];
-	  const project = projects.find(p => p.file === filename) || {
-		title: filename,
-		desc: '',
-		tools: WORK_TOOLS[filename] || []
-	  };
-	  const tools = WORK_TOOLS[filename] || [];
-
-	  // Overlay
-	  const overlay = document.createElement('div');
-	  overlay.className = 'project-detail-overlay';
-	  Object.assign(overlay.style, {
-		position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-		backgroundColor: 'rgba(0,0,0,0.92)', zIndex: '9999',
-		display: 'flex', alignItems: 'center', justifyContent: 'center',
-		opacity: '0', transition: 'opacity 0.3s ease',
-		padding: '40px'
-	  });
-
-	  // Kart
-	  const card = document.createElement('div');
-	  card.className = 'project-detail-card';
-	  Object.assign(card.style, {
-		display: 'flex', maxWidth: '1100px', width: '100%', maxHeight: '85vh',
-		backgroundColor: '#111', borderRadius: '16px', overflow: 'hidden',
-		boxShadow: '0 30px 80px rgba(0,0,0,0.7)',
-		transform: 'scale(0.95)', transition: 'transform 0.3s ease',
-		flexDirection: 'row'
-	  });
-
-	  // Sol: Görsel
-	  const imgWrap = document.createElement('div');
-	  imgWrap.className = 'project-detail-img';
-	  Object.assign(imgWrap.style, {
-		flex: '1 1 55%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-		background: '#000', minHeight: '400px', position: 'relative', overflow: 'hidden'
-	  });
-	  const img = document.createElement('img');
-	  img.src = imageSrc;
-	  Object.assign(img.style, {
-		width: '100%', height: '100%', objectFit: 'contain', display: 'block'
-	  });
-	  imgWrap.appendChild(img);
-
-	  // Sağ: Bilgi
-	  const info = document.createElement('div');
-	  info.className = 'project-detail-info';
-	  Object.assign(info.style, {
-		flex: '1 1 45%', padding: '48px 40px', display: 'flex', flexDirection: 'column',
-		justifyContent: 'center', color: '#fff', overflowY: 'auto'
-	  });
-
-	  // Başlık
-	  const title = document.createElement('h3');
-	  title.textContent = project.title;
-	  Object.assign(title.style, {
-		fontFamily: 'Syne, sans-serif', fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
-		fontWeight: '800', letterSpacing: '-0.03em', lineHeight: '1.1', marginBottom: '24px'
-	  });
-	  info.appendChild(title);
-
-	  // Açıklama
-	  if (project.desc) {
-		const desc = document.createElement('p');
-		desc.textContent = project.desc;
-		Object.assign(desc.style, {
-		  fontSize: '0.95rem', lineHeight: '1.7', color: 'rgba(255,255,255,0.7)',
-		  fontWeight: '300', marginBottom: '32px', maxWidth: '90%'
-		});
-		info.appendChild(desc);
-	  }
-
-	  // Araçlar
-	  if (tools.length) {
-		const toolsLabel = document.createElement('span');
-		toolsLabel.textContent = currentLang === 'tr' ? 'Kullanılan Araçlar' : 'Tools Used';
-		Object.assign(toolsLabel.style, {
-		  fontSize: '0.7rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)',
-		  textTransform: 'uppercase', marginBottom: '12px', display: 'block'
-		});
-		info.appendChild(toolsLabel);
-		const toolsRow = document.createElement('div');
-		toolsRow.style.display = 'flex'; toolsRow.style.gap = '12px'; toolsRow.style.flexWrap = 'wrap';
-		tools.forEach(t => {
-		  const badge = document.createElement('div');
-		  Object.assign(badge.style, {
-			width: '40px', height: '40px', background: 'rgba(255,255,255,0.08)',
-			borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-			padding: '6px'
-		  });
-		  const icon = document.createElement('img');
-		  icon.src = TOOL_LOGOS[t.toLowerCase()];
-		  icon.alt = t;
-		  icon.style.width = '100%'; icon.style.height = '100%'; icon.style.objectFit = 'contain';
-		  badge.appendChild(icon);
-		  toolsRow.appendChild(badge);
-		});
-		info.appendChild(toolsRow);
-	  }
-
-	  // Kapat düğmesi
-	  const closeBtn = document.createElement('button');
-	  closeBtn.textContent = '✕';
-	  Object.assign(closeBtn.style, {
-		position: 'absolute', top: '16px', right: '16px',
-		background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff',
-		width: '36px', height: '36px', borderRadius: '50%', fontSize: '1.2rem',
-		cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-		transition: 'background 0.2s', zIndex: '2'
-	  });
-	  closeBtn.onmouseenter = () => closeBtn.style.background = 'rgba(255,255,255,0.2)';
-	  closeBtn.onmouseleave = () => closeBtn.style.background = 'rgba(255,255,255,0.08)';
-
-	  // Overlay'e kapatma olayı
-	  overlay.addEventListener('click', (e) => {
-		if (e.target === overlay) {
-		  overlay.style.opacity = '0';
-		  card.style.transform = 'scale(0.95)';
-		  setTimeout(() => overlay.remove(), 300);
-		}
-	  });
-	  closeBtn.addEventListener('click', () => {
-		overlay.style.opacity = '0';
-		card.style.transform = 'scale(0.95)';
-		setTimeout(() => overlay.remove(), 300);
-	  });
-
-	  // ESC ile kapat
-	  const escHandler = (e) => {
-		if (e.key === 'Escape') {
-		  overlay.style.opacity = '0';
-		  card.style.transform = 'scale(0.95)';
-		  setTimeout(() => overlay.remove(), 300);
-		  window.removeEventListener('keydown', escHandler);
-		}
-	  };
-	  window.addEventListener('keydown', escHandler);
-
-	  card.appendChild(imgWrap);
-	  card.appendChild(info);
-	  card.style.position = 'relative';
-	  card.appendChild(closeBtn);
-	  overlay.appendChild(card);
-	  document.body.appendChild(overlay);
-
-	  requestAnimationFrame(() => {
-		overlay.style.opacity = '1';
-		card.style.transform = 'scale(1)';
-	  });
-	}
-
-    function makeCard(src, idx, tool) {
-      const card = document.createElement('div');
-      card.className = 'work__belt-card';
-      card.dataset.index = idx;
-
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = `Work ${idx + 1}`;
-      img.draggable = false;
-      card.appendChild(img);
-
-      const fallback = document.createElement('div');
-      fallback.className = 'work__belt-card-fallback';
-      fallback.textContent = src.split('/').pop();
-      card.appendChild(fallback);
-
-      const info = document.createElement('div');
-      info.className = 'work__belt-card-info';
-      info.innerHTML = `
-        <span class="work__belt-card-num">${String(idx + 1).padStart(2, '0')}</span>
-        <span class="work__belt-card-label">work_belt_${String(idx + 1).padStart(2, '0')}.jpg</span>
-      `;
-      card.appendChild(info);
-
-      const tools = Array.isArray(tool) ? tool : (tool ? [tool] : []);
-      const validTools = tools.filter(t => TOOL_LOGOS[t.toLowerCase().trim()]);
-      if (validTools.length) {
-        const toolsWrap = document.createElement('div');
-        toolsWrap.className = 'work__belt-card-tools';
-        validTools.forEach(t => {
-          const badge = document.createElement('div');
-          badge.className = 'work__belt-card-tool';
-          const toolImg = document.createElement('img');
-          toolImg.src = TOOL_LOGOS[t.toLowerCase().trim()];
-          toolImg.alt = t;
-          badge.appendChild(toolImg);
-          toolsWrap.appendChild(badge);
-        });
-        card.appendChild(toolsWrap);
-      }
-
-      let startX, startY;
-      card.addEventListener('pointerdown', e => { startX = e.clientX; startY = e.clientY; });
-		card.addEventListener('pointerup', e => {
-		  const diffX = Math.abs(e.clientX - startX);
-		  const diffY = Math.abs(e.clientY - startY);
-		  if (diffX < 5 && diffY < 5) openProjectDetail(src);
-		});
-
-      return card;
-    }
-
-    buildBeltCards(null);
-
-	const GAP      = 16;
-	const cardW    = () => belt.querySelector('.work__belt-card')?.offsetWidth || 400;
-	const setW     = () => activeImages.length * (cardW() + GAP); // srcList yerine activeImages oldu
-
-    let offsetX    = 0;
-    let startSet   = 0;
-
-	function initOffset() {
-	  const isLooping = activeImages.length > 4;
-	  // Döngü varsa orta sete ( -setW ), yoksa en başa ( 0 ) odaklan
-	  startSet = isLooping ? -setW() : 0;
-	  offsetX  = startSet;
-	  belt.style.transform = `translateX(${offsetX}px)`;
-	}
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(initOffset);
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === e.target.id));
     });
+  }, { threshold: 0.4 });
 
-    let isDragging  = false;
-    let dragStartX  = 0;
-    let dragStartOX = 0;
-    let velocity    = 0;
-    let lastX       = 0;
-    let lastTime    = 0;
-    let rafId       = null;
+  sections.forEach(s => io.observe(s));
 
-    function applyTransform(x, snap = false) {
-      if (snap) {
-        belt.classList.add('is-snapping');
-        setTimeout(() => belt.classList.remove('is-snapping'), 460);
-      }
-      offsetX = x;
-      belt.style.transform = `translateX(${x}px)`;
-      updateCounter();
-    }
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+      closeMobileMenu();
+    });
+  });
+}
 
-	function loopCheck() {
-	  // 4 veya daha az fotoğraf varsa döngü kontrolünü çalıştırma
-	  if (activeImages.length <= 4) return;
+function initMobileMenu() {
+  const burger = $('#burgerBtn');
+  const menu   = $('#mobileMenu');
+  if (!burger || !menu) return;
 
-	  const sw = setW();
-	  if (offsetX < startSet - sw) {
-		offsetX += sw;
-		belt.style.transform = `translateX(${offsetX}px)`;
-	  } else if (offsetX > startSet + sw) {
-		offsetX -= sw;
-		belt.style.transform = `translateX(${offsetX}px)`;
-	  }
-	}
+  const open  = () => { burger.classList.add('open');  menu.classList.add('open');  burger.setAttribute('aria-expanded', 'true'); };
+  const close = () => { burger.classList.remove('open'); menu.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); };
 
-	function updateCounter() {
-	  if (!elCur || !activeImages.length) return;
-	  const isLooping = activeImages.length > 4;
-	  
-	  // Döngü varsa startSet'e göre, yoksa 0'a göre hesapla
-	  const rel = isLooping ? -(offsetX - startSet) : -offsetX;
-	  const idx = Math.round(rel / (cardW() + GAP));
-	  const mod = ((idx % activeImages.length) + activeImages.length) % activeImages.length;
-	  elCur.textContent = String(mod + 1).padStart(2, '0');
-	}
+  burger.addEventListener('click', () => burger.classList.contains('open') ? close() : open());
+  document.addEventListener('click', e => {
+    if (!menu.contains(e.target) && !burger.contains(e.target)) close();
+  });
+}
 
-    function onDragStart(x) {
-      isDragging  = true;
-      dragStartX  = x;
-      dragStartOX = offsetX;
-      lastX       = x;
-      lastTime    = performance.now();
-      velocity    = 0;
-      belt.classList.remove('is-snapping');
-      wrap.classList.add('is-dragging');
-      if (hint) hint.classList.add('dragging');
-      cancelAnimationFrame(rafId);
-    }
+function closeMobileMenu() {
+  $('#burgerBtn')?.classList.remove('open');
+  $('#mobileMenu')?.classList.remove('open');
+  $('#burgerBtn')?.setAttribute('aria-expanded', 'false');
+}
 
-	function onDragMove(x) {
-	  if (!isDragging) return;
-	  const dx  = x - dragStartX;
-	  let targetX = dragStartOX + dx;
+/* ══════════════════════════════════════════════
+   REVEAL ON SCROLL
+══════════════════════════════════════════════ */
+function initReveal() {
+  const els = $$('.reveal-up, .reveal-right');
+  if (!els.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+}
 
-	  // Döngü kapalıyken (4'ten az fotoğraf) sınırları koru
-	  if (activeImages.length <= 4) {
-		const maxDrag = 0; // En sol sınır
-		const minDrag = -(belt.scrollWidth - wrap.offsetWidth); // En sağ sınır
-		if (targetX > maxDrag) targetX = maxDrag;
-		if (targetX < minDrag && minDrag < 0) targetX = minDrag;
-		else if (minDrag >= 0) targetX = 0; // Ekrana sığıyorsa hiç oynatma
-	  }
+/* ══════════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════════ */
+function initCursor() {
+  if (!window.matchMedia('(hover: hover)').matches) return;
+  const cursor = $('#cursor');
+  if (!cursor) return;
 
-	  const now = performance.now();
-	  velocity  = (x - lastX) / (now - lastTime + 1) * 16;
-	  lastX     = x;
-	  lastTime  = now;
-	  
-	  applyTransform(targetX);
-	  loopCheck();
-	}
+  let mx = -100, my = -100, cx = -100, cy = -100, raf;
 
-    function onDragEnd() {
-      if (!isDragging) return;
-      isDragging = false;
-      wrap.classList.remove('is-dragging');
-      if (hint) hint.classList.remove('dragging');
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-      let vel = velocity * 12;
-      const friction = 0.92;
+  const tick = () => {
+    cx += (mx - cx) * 0.18;
+    cy += (my - cy) * 0.18;
+    cursor.style.left = cx + 'px';
+    cursor.style.top  = cy + 'px';
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
 
-      function coast() {
-        vel *= friction;
-        applyTransform(offsetX + vel);
-        loopCheck();
-        if (Math.abs(vel) > 0.5) {
-          rafId = requestAnimationFrame(coast);
-        }
-      }
-      rafId = requestAnimationFrame(coast);
-    }
+  $$('a, button, .project-card, .tool-btn, .filter-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+}
 
-    wrap.addEventListener('mousedown', e => { e.preventDefault(); onDragStart(e.clientX); });
-    window.addEventListener('mousemove', e => { if (isDragging) onDragMove(e.clientX); });
-    window.addEventListener('mouseup', () => { if (isDragging) onDragEnd(); });
+/* ══════════════════════════════════════════════
+   ABOUT — TOOL BUTTONS
+══════════════════════════════════════════════ */
+function initAboutTools() {
+  const wrap = $('#aboutTools');
+  if (!wrap) return;
 
-    wrap.addEventListener('touchstart', e => {
-      onDragStart(e.touches[0].clientX);
-    }, { passive: true });
+  ABOUT_TOOLS.forEach(key => {
+    const logo = TOOL_LOGOS[key];
+    if (!logo) return;
 
-    wrap.addEventListener('touchmove', e => {
-      if (!isDragging) return;
-      e.stopPropagation();
-      onDragMove(e.touches[0].clientX);
-    }, { passive: true });
+    const btn = document.createElement('button');
+    btn.className = 'tool-btn';
+    btn.dataset.tool = key;
+    btn.title = TOOL_NAMES[key] || key;
 
-    wrap.addEventListener('touchend', () => { if (isDragging) onDragEnd(); }, { passive: true });
-  }
+    const img = document.createElement('img');
+    img.src = logo;
+    img.alt = TOOL_NAMES[key] || key;
+    img.loading = 'lazy';
+    btn.appendChild(img);
 
-  function initAboutTools() {
-    const wrap = document.getElementById('aboutTools');
-    if (!wrap) return;
+    btn.addEventListener('click', () => {
+      const isActive = btn.classList.contains('active');
+      $$('.tool-btn').forEach(b => b.classList.remove('active'));
 
-    ABOUT_TOOLS.forEach(toolKey => {
-      if (!TOOL_LOGOS[toolKey]) return;
-      const btn = document.createElement('button');
-      btn.className = 'about__tool-btn';
-      btn.dataset.tool = toolKey;
-      btn.title = toolKey;
-
-      const img = document.createElement('img');
-      img.src = TOOL_LOGOS[toolKey];
-      img.alt = toolKey;
-      btn.appendChild(img);
-
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.about__tool-btn').forEach(b => b.classList.remove('active'));
+      if (isActive) {
+        activeToolFilter = null;
+        renderProjects(activeFilter, null);
+      } else {
         btn.classList.add('active');
-        if (triggerWorkFilter) triggerWorkFilter(toolKey);
+        activeToolFilter = key;
+        document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          $$('.filter-btn').forEach(b => b.classList.remove('active'));
+          $('.filter-btn[data-filter="all"]')?.classList.add('active');
+          activeFilter = 'all';
+          renderProjects('all', key);
+        }, 600);
+      }
+    });
+
+    wrap.appendChild(btn);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   WORK — PROJECT GRID
+══════════════════════════════════════════════ */
+function projectMatchesToolFilter(proj, toolFilter) {
+  if (!toolFilter) return true;
+  if (proj.tools.includes(toolFilter)) return true;
+  /* Also match by category affinity */
+  const cats = TOOL_CATEGORIES[toolFilter] || [];
+  return cats.includes(proj.category);
+}
+
+function getVisible(filter, toolFilter) {
+  return PROJECTS.filter(p => {
+    const catMatch  = filter === 'all' || p.category === filter;
+    const toolMatch = projectMatchesToolFilter(p, toolFilter);
+    return catMatch && toolMatch;
+  });
+}
+
+function renderProjects(filter = 'all', toolFilter = null) {
+  const grid = $('#workGrid');
+  if (!grid) return;
+
+  const visible = getVisible(filter, toolFilter);
+  grid.innerHTML = '';
+
+  if (!visible.length) {
+    const empty = document.createElement('div');
+    empty.className = 'work__empty';
+    empty.textContent = currentLang === 'tr'
+      ? 'Bu kategoride proje bulunamadı.'
+      : 'No projects found in this category.';
+    grid.appendChild(empty);
+    return;
+  }
+
+  visible.forEach((proj, idx) => {
+    const title    = currentLang === 'tr' ? proj.titleTR    : proj.title;
+    const catLabel = currentLang === 'tr' ? proj.categoryLabelTR : proj.categoryLabel;
+
+    const card = document.createElement('article');
+    card.className = 'project-card';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `Open project: ${title}`);
+    card.style.background = proj.gradient || '#111';
+
+    /* Big decorative number */
+    const bigNum = document.createElement('div');
+    bigNum.className = 'project-card__bignum';
+    bigNum.textContent = String(proj.id).padStart(2, '0');
+
+    /* Cover image or video badge */
+    if (proj.video && !proj.cover) {
+      /* Video-only project: show play badge */
+      const badge = document.createElement('div');
+      badge.className = 'project-card__video-badge';
+      badge.innerHTML = '<span>▶</span>';
+      card.appendChild(bigNum);
+      card.appendChild(badge);
+    } else if (proj.cover) {
+      const img = document.createElement('img');
+      img.className = 'project-card__img';
+      img.alt = title;
+      img.loading = 'lazy';
+      img.onerror = () => img.remove();
+      img.src = proj.cover;
+      card.appendChild(bigNum);
+      card.appendChild(img);
+    } else {
+      card.appendChild(bigNum);
+    }
+
+    /* Overlay */
+    const overlay = document.createElement('div');
+    overlay.className = 'project-card__overlay';
+
+    /* Category badge */
+    const catBadge = document.createElement('div');
+    catBadge.className = 'project-card__category';
+    catBadge.textContent = catLabel;
+
+    /* Tool icons */
+    const toolsWrap = document.createElement('div');
+    toolsWrap.className = 'project-card__tools';
+    proj.tools.forEach(t => {
+      const logo = TOOL_LOGOS[t];
+      if (!logo) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'project-card__tool';
+      const ti = document.createElement('img');
+      ti.src = logo;
+      ti.alt = TOOL_NAMES[t] || t;
+      wrap.appendChild(ti);
+      toolsWrap.appendChild(wrap);
+    });
+
+    /* Image count badge (for multi-image) */
+    if (proj.images.length > 1) {
+      const countBadge = document.createElement('div');
+      countBadge.className = 'project-card__count';
+      countBadge.textContent = `${proj.images.length} screens`;
+      card.appendChild(countBadge);
+    }
+
+    /* Footer */
+    const footer = document.createElement('div');
+    footer.className = 'project-card__footer';
+    footer.innerHTML = `
+      <span class="project-card__num">${String(idx + 1).padStart(2, '0')}</span>
+      <span class="project-card__title">${title}</span>
+      <span class="project-card__inspect">Inspect →</span>
+    `;
+
+    card.append(overlay, catBadge, toolsWrap, footer);
+
+    const open = () => openModal(proj);
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function initFilters() {
+  const bar = $('#workFilters');
+  if (!bar) return;
+
+  bar.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+
+    $$('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter     = btn.dataset.filter;
+    activeToolFilter = null;
+    $$('.tool-btn').forEach(b => b.classList.remove('active'));
+    renderProjects(activeFilter, null);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   PROJECT MODAL — GALLERY
+══════════════════════════════════════════════ */
+function setModalImage(index) {
+  modalImgIndex = ((index % modalImages.length) + modalImages.length) % modalImages.length;
+
+  const mainImg = $('#modalMainImg');
+  if (mainImg) {
+    mainImg.style.opacity = '0';
+    setTimeout(() => {
+      mainImg.src = modalImages[modalImgIndex];
+      mainImg.style.opacity = '1';
+    }, 150);
+  }
+
+  /* Update counter */
+  const counter = $('#modalCounter');
+  if (counter) counter.textContent = `${modalImgIndex + 1} / ${modalImages.length}`;
+
+  /* Update thumbnail active state */
+  $$('.modal__thumb').forEach((th, i) => {
+    th.classList.toggle('active', i === modalImgIndex);
+  });
+}
+
+function openModal(proj) {
+  const overlay  = $('#modalOverlay');
+  const imgWrap  = $('#modalImg');
+  const infoWrap = $('#modalInfo');
+  if (!overlay || !imgWrap || !infoWrap) return;
+
+  const title    = currentLang === 'tr' ? proj.titleTR    : proj.title;
+  const catLabel = currentLang === 'tr' ? proj.categoryLabelTR : proj.categoryLabel;
+  const desc     = currentLang === 'tr' ? proj.descTR     : proj.desc;
+  const toolsLbl = currentLang === 'tr' ? 'Kullanılan Araçlar' : 'Tools Used';
+  const yearLbl  = currentLang === 'tr' ? 'Yıl' : 'Year';
+
+  /* ── LEFT: Gallery or Video ── */
+  imgWrap.innerHTML = '';
+  modalImages = proj.images || [];
+  modalImgIndex = 0;
+
+  if (proj.video && modalImages.length === 0) {
+    /* Video only */
+    const vid = document.createElement('video');
+    vid.src = proj.video;
+    vid.controls = true;
+    vid.autoplay = false;
+    vid.className = 'modal__video';
+    imgWrap.appendChild(vid);
+  } else if (modalImages.length > 0) {
+    /* Build gallery */
+    const galleryWrap = document.createElement('div');
+    galleryWrap.className = 'modal__gallery';
+
+    /* Main image */
+    const mainImg = document.createElement('img');
+    mainImg.id = 'modalMainImg';
+    mainImg.className = 'modal__gallery-img';
+    mainImg.src = modalImages[0];
+    mainImg.alt = title;
+    mainImg.style.transition = 'opacity 0.15s ease';
+    galleryWrap.appendChild(mainImg);
+
+    /* Prev / Next (only if multiple images) */
+    if (modalImages.length > 1) {
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'modal__nav modal__nav--prev';
+      prevBtn.innerHTML = '‹';
+      prevBtn.setAttribute('aria-label', 'Previous image');
+      prevBtn.addEventListener('click', e => { e.stopPropagation(); setModalImage(modalImgIndex - 1); });
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'modal__nav modal__nav--next';
+      nextBtn.innerHTML = '›';
+      nextBtn.setAttribute('aria-label', 'Next image');
+      nextBtn.addEventListener('click', e => { e.stopPropagation(); setModalImage(modalImgIndex + 1); });
+
+      const counter = document.createElement('div');
+      counter.id = 'modalCounter';
+      counter.className = 'modal__counter';
+      counter.textContent = `1 / ${modalImages.length}`;
+
+      galleryWrap.append(prevBtn, nextBtn, counter);
+
+      /* Thumbnail strip */
+      const thumbs = document.createElement('div');
+      thumbs.className = 'modal__thumbs';
+      modalImages.forEach((src, i) => {
+        const th = document.createElement('button');
+        th.className = 'modal__thumb' + (i === 0 ? ' active' : '');
+        th.setAttribute('aria-label', `View image ${i + 1}`);
+        const thImg = document.createElement('img');
+        thImg.src = src;
+        thImg.alt = '';
+        thImg.loading = 'lazy';
+        th.appendChild(thImg);
+        th.addEventListener('click', e => { e.stopPropagation(); setModalImage(i); });
+        thumbs.appendChild(th);
       });
+      galleryWrap.appendChild(thumbs);
 
-      wrap.appendChild(btn);
-    });
+      /* Keyboard navigation */
+      const keyHandler = e => {
+        if (e.key === 'ArrowLeft')  setModalImage(modalImgIndex - 1);
+        if (e.key === 'ArrowRight') setModalImage(modalImgIndex + 1);
+      };
+      overlay._keyHandler = keyHandler;
+      document.addEventListener('keydown', keyHandler);
+    }
+
+    imgWrap.appendChild(galleryWrap);
+  } else {
+    imgWrap.innerHTML = `<div class="modal__img-placeholder" style="background:${proj.gradient}">${title}</div>`;
   }
 
-  loadContent();
-  initBelt();
+  /* ── RIGHT: Info ── */
+  const toolsHTML = proj.tools.map(t => {
+    const logo = TOOL_LOGOS[t];
+    const name = TOOL_NAMES[t] || t;
+    return `<div class="modal__tool-badge">
+      ${logo ? `<img src="${logo}" alt="${name}" />` : ''}
+      <span>${name}</span>
+    </div>`;
+  }).join('');
+
+  infoWrap.innerHTML = `
+    <p class="modal__category">${catLabel}</p>
+    <h3 class="modal__title">${title}</h3>
+    <p class="modal__desc">${desc}</p>
+    <span class="modal__tools-label">${toolsLbl}</span>
+    <div class="modal__tools">${toolsHTML}</div>
+    <p class="modal__year"><strong>${yearLbl}:</strong> ${proj.year}</p>
+  `;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const overlay = $('#modalOverlay');
+  if (!overlay) return;
+
+  /* Remove arrow key listener if set */
+  if (overlay._keyHandler) {
+    document.removeEventListener('keydown', overlay._keyHandler);
+    overlay._keyHandler = null;
+  }
+
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+
+  /* Pause any playing video */
+  $('#modalImg video')?.pause();
+}
+
+function initModal() {
+  const overlay  = $('#modalOverlay');
+  const closeBtn = $('#modalClose');
+  if (!overlay) return;
+
+  closeBtn?.addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+}
+
+/* ══════════════════════════════════════════════
+   CONTACT FORM
+══════════════════════════════════════════════ */
+function initContactForm() {
+  const form = $('#contactForm');
+  const successEl = $('#formSuccess');
+  if (!form) return;
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name  = $('#f-name').value.trim();
+    const email = $('#f-email').value.trim();
+    const msg   = $('#f-msg').value.trim();
+
+    if (!name || !email || !msg) {
+      if (successEl) {
+        successEl.style.color = '#ff6b6b';
+        successEl.textContent = currentLang === 'tr'
+          ? 'Lütfen tüm alanları doldurun.'
+          : 'Please fill in all fields.';
+      }
+      return;
+    }
+
+    const btn = form.querySelector('.c-form__submit');
+    if (btn) btn.disabled = true;
+
+    setTimeout(() => {
+      form.reset();
+      if (successEl) {
+        successEl.style.color = '';
+        successEl.textContent = currentLang === 'tr'
+          ? 'Mesajınız gönderildi! En kısa sürede geri döneceğim.'
+          : 'Message sent! I\'ll get back to you shortly.';
+      }
+      if (btn) btn.disabled = false;
+      setTimeout(() => { if (successEl) successEl.textContent = ''; }, 5000);
+    }, 800);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   LANGUAGE TOGGLE
+══════════════════════════════════════════════ */
+function initLangToggle() {
+  const btn = $('#langBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => applyLang(currentLang === 'en' ? 'tr' : 'en'));
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initNav();
+  initMobileMenu();
+  initReveal();
+  initCursor();
   initAboutTools();
-
-  /* ── Content loader ────────────────── */
-  async function loadContent() {
-    const c = window.SITE_CONTENT[currentLang];
-    if (!c) { console.warn('SITE_CONTENT bulunamadı.'); return; }
-
-    const set = (sel, html, prop = 'innerHTML') => {
-      const el = document.querySelector(sel);
-      if (el) el[prop] = html;
-    };
-
-    set('.nav__logo', c.nav.logo + '<sup>®</sup>');
-
-    set('.hero__subtitle', c.home.hero.subtitle, 'textContent');
-    const heroCopyP = document.querySelector('.hero__copy p');
-    if (heroCopyP) heroCopyP.innerHTML = c.home.hero.copy;
-    set('.hero__clients-label', c.home.hero.clientsLabel, 'textContent');
-    set('.hero__card-title',    c.home.hero.card.title);
-    set('.hero__card-year',     c.home.hero.card.year, 'textContent');
-    set('.hero__card-btn',      c.home.hero.card.button, 'textContent');
-    set('.rating-score',        c.home.hero.ratingScore, 'textContent');
-    set('.hero__trust',         c.home.hero.trust);
-	set('#aboutToolsLabel', c.about.toolsLabel, 'textContent');
-    set('.quote-author__name', c.home.quote.authorName, 'textContent');
-    set('.quote-author__role', c.home.quote.authorRole, 'textContent');
-    const quoteEl = document.querySelector('.quote-text');
-    if (quoteEl) quoteEl.innerHTML =
-      `<span class="quote-mark">"</span>${c.home.quote.text}<span class="quote-mark">"</span>`;
-
-    set('[data-panel="1"] .section-label', c.about.label, 'textContent');
-    set('.about__title', c.about.title);
-    const bios = document.querySelectorAll('.about__bio');
-    if (bios[0]) bios[0].textContent = c.about.bio1;
-    if (bios[1]) bios[1].textContent = c.about.bio2;
-    document.querySelectorAll('.about__stat').forEach((el, i) => {
-      if (!c.about.stats[i]) return;
-      el.querySelector('.about__stat-num').textContent   = c.about.stats[i].num;
-      el.querySelector('.about__stat-label').textContent = c.about.stats[i].label;
-    });
-
-    set('[data-panel="2"] .section-label', c.work.label, 'textContent');
-    set('.work__title', c.work.title);
-    const dragSpan = document.querySelector('.work__drag-hint span');
-    if (dragSpan) dragSpan.textContent = c.work.dragHint;
-
-    set('[data-panel="3"] .section-label', c.contact.label, 'textContent');
-    set('.contact__title', c.contact.title);
-    set('.contact__sub',   c.contact.sub, 'textContent');
-    document.querySelectorAll('.contact__link').forEach((el, i) => {
-      if (!c.contact.links[i]) return;
-      el.textContent = c.contact.links[i].text;
-      el.href        = c.contact.links[i].href;
-    });
-    const footerSpans = document.querySelectorAll('.contact__footer span');
-    if (footerSpans[0]) footerSpans[0].textContent = c.contact.footerCopyright;
-    if (footerSpans[1]) footerSpans[1].textContent = c.contact.footerLocation;
-
-    document.querySelectorAll('.form-group').forEach((el, i) => {
-      const f = c.contact.form.fields[i];
-      if (!f) return;
-      const label = el.querySelector('label');
-      if (label) label.textContent = f.label;
-      const field = f.type === 'textarea'
-        ? el.querySelector('textarea')
-        : el.querySelector('input');
-      if (field) field.placeholder = f.placeholder;
-    });
-    set('.contact__submit', c.contact.form.submit, 'textContent');
-  }
-
-  /* ── Lang toggle ───────────────────── */
-  const langToggle = document.getElementById('langToggle');
-  if (langToggle) {
-    langToggle.addEventListener('click', () => {
-      currentLang = currentLang === 'en' ? 'tr' : 'en';
-      langToggle.textContent = currentLang.toUpperCase();
-      loadContent();
-    });
-  }
-
-  /* ── Custom cursor ─────────────────── */
-  if (window.matchMedia('(hover: hover)').matches) {
-    const cursor = document.createElement('div');
-    cursor.classList.add('custom-cursor');
-    document.body.appendChild(cursor);
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top  = e.clientY + 'px';
-    });
-    document.querySelectorAll('a, button, .hero__card').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
-  }
-
-  /* ── Ticker pause on hover ─────────── */
-  const tickerWrap  = document.querySelector('.ticker-wrap');
-  const tickerTrack = document.querySelector('.ticker__track');
-  if (tickerWrap && tickerTrack) {
-    tickerWrap.addEventListener('mouseenter', () => tickerTrack.style.animationPlayState = 'paused');
-    tickerWrap.addEventListener('mouseleave', () => tickerTrack.style.animationPlayState = 'running');
-  }
-
-})();
+  initFilters();
+  renderProjects();
+  initModal();
+  initContactForm();
+  initLangToggle();
+});

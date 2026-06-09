@@ -60,7 +60,7 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 10000;
   transform: translate(-50%, -50%);
   transition: width .25s var(--ease), height .25s var(--ease), opacity .2s;
-  mix-blend-mode: difference;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
 }
 
 .cursor.grow {
@@ -898,8 +898,7 @@ button { font-family: inherit; cursor: pointer; }
 .project-card__tool {
   width: 36px;
   height: 36px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.82);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -996,8 +995,7 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.65);
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.82);
   border-radius: 50px;
   padding: 3px 10px;
   z-index: 3;

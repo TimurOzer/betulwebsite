@@ -4,9 +4,16 @@
 
 'use strict';
 
-/* ── URL-safe path helper ─────────────────── */
-function p(path) {
-  return path.split('/').map(encodeURIComponent).join('/');
+/* ── Media path helper ─────────────────────────
+   Optimized images live in media/<slug>/<n>.jpg (full, ≤1600px)
+   and media/<slug>/<n>-t.jpg (thumbnail, ≤500px).            */
+function media(slug, count) {
+  const images = [], thumbs = [];
+  for (let i = 1; i <= count; i++) {
+    images.push(`media/${slug}/${i}.jpg`);
+    thumbs.push(`media/${slug}/${i}-t.jpg`);
+  }
+  return { images, thumbs, cover: thumbs[0] };
 }
 
 /* ── Project Data ──────────────────────────── */
@@ -19,26 +26,7 @@ const PROJECTS = [
     categoryLabel: 'UI/UX',
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #0e0022 0%, #1c0045 100%)',
-    cover: p('PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155838.png'),
-    images: [
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155838.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155917.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 155933.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160015.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160031.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160044.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160104.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160128.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160140.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160149.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160158.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160211.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160222.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160247.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160304.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160357.png',
-      'PROJELER/pigmentia/Ekran görüntüsü 2026-06-08 160408.png',
-    ].map(p),
+    ...media('pigmentia', 17),
     tools: ['adobe xd', 'figma'],
     desc: 'A complete website design for Pigmentia — a modern color exploration and palette generation platform. Built user-first: clean navigation, accessible contrast tools, and a cohesive design system that balances aesthetic beauty with frictionless interaction.',
     descTR: 'Pigmentia için kapsamlı web sitesi tasarımı — modern renk keşif ve palet üretim platformu. Kullanıcı odaklı: temiz navigasyon, erişilebilir kontrast araçları ve estetik güzelliği sorunsuz etkileşimle dengeleyen tutarlı bir tasarım sistemi.',
@@ -52,20 +40,7 @@ const PROJECTS = [
     categoryLabel: 'UI/UX',
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #080010 0%, #12001f 100%)',
-    cover: p('PROJELER/nox/1.png'),
-    images: [
-      'PROJELER/nox/1.png',
-      'PROJELER/nox/2.png',
-      'PROJELER/nox/3.png',
-      'PROJELER/nox/4.png',
-      'PROJELER/nox/5.png',
-      'PROJELER/nox/6.png',
-      'PROJELER/nox/7.png',
-      'PROJELER/nox/8.png',
-      'PROJELER/nox/9.png',
-      'PROJELER/nox/10.png',
-      'PROJELER/nox/11.png',
-    ].map(p),
+    ...media('nox', 11),
     tools: ['figma', 'adobe xd'],
     desc: 'A dark, immersive website design for Nox — a bold visual identity brought to life through deep contrast, refined typography, and a meticulously layered UI. Every screen was designed to evoke atmosphere while maintaining clear usability.',
     descTR: 'Nox için koyu, sürükleyici bir web sitesi tasarımı — güçlü bir görsel kimlik, derin kontrast, rafine tipografi ve katmanlı bir arayüzle hayata geçirildi. Her ekran, net kullanılabilirliği korurken atmosfer yaratmak için tasarlandı.',
@@ -79,15 +54,7 @@ const PROJECTS = [
     categoryLabel: 'UI/UX',
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #001a10 0%, #002818 100%)',
-    cover: p('PROJELER/catch oyun/menu.png'),
-    images: [
-      'PROJELER/catch oyun/menu.png',
-      'PROJELER/catch oyun/1.png',
-      'PROJELER/catch oyun/2.png',
-      'PROJELER/catch oyun/3.png',
-      'PROJELER/catch oyun/4.png',
-      'PROJELER/catch oyun/5.png',
-    ].map(p),
+    ...media('catch', 6),
     tools: ['adobe xd', 'illustrator'],
     desc: 'Full UI design for Catch — a mobile game experience including main menu, HUD, level screens, and end states. The interface was crafted to feel intuitive and energetic, keeping players engaged with clear visual feedback at every moment.',
     descTR: 'Catch için tam UI tasarımı — ana menü, HUD, level ekranları ve bitiş ekranları dahil mobil oyun arayüzü. Arayüz, her an net görsel geri bildirimle oyuncuları bağlı tutan sezgisel ve enerjik bir his verecek şekilde tasarlandı.',
@@ -101,11 +68,7 @@ const PROJECTS = [
     categoryLabel: 'UI/UX',
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #001830 0%, #002448 100%)',
-    cover: p('PROJELER/igü obis/Ekran görüntüsü 2026-06-08 153721.png'),
-    images: [
-      'PROJELER/igü obis/Ekran görüntüsü 2026-06-08 153721.png',
-      'PROJELER/igü obis/png.png',
-    ].map(p),
+    ...media('igu-obis', 2),
     tools: ['figma'],
     desc: 'A modern redesign of Istanbul Gelişim University\'s OBIS student portal. The goal was to simplify complex academic workflows into a clean, accessible interface — reducing friction for students navigating course registrations, grades, and schedules.',
     descTR: 'İstanbul Gelişim Üniversitesi\'nin OBIS öğrenci portalının modern yeniden tasarımı. Amaç, karmaşık akademik süreçleri temiz ve erişilebilir bir arayüze dönüştürmek — ders kayıt, not ve program takibinde öğrencilerin yaşadığı zorluğu azaltmak.',
@@ -119,14 +82,7 @@ const PROJECTS = [
     categoryLabel: 'Branding',
     categoryLabelTR: 'Marka Tasarımı',
     gradient: 'linear-gradient(135deg, #1a0800 0%, #2e1200 100%)',
-    cover: p('PROJELER/Petgrooming/pet-grooming-logo.jpg'),
-    images: [
-      'PROJELER/Petgrooming/pet-grooming-logo.jpg',
-      'PROJELER/Petgrooming/pet-grooming-post.jpg',
-      'PROJELER/Petgrooming/pet-grooming-canta.jpg',
-      'PROJELER/Petgrooming/pet-grooming-canta2.jpg',
-      'PROJELER/Petgrooming/pet-grooming-cepli-dosya.jpg',
-    ].map(p),
+    ...media('petgrooming', 5),
     tools: ['illustrator', 'photoshop'],
     desc: 'A full brand identity system for a pet grooming business — logo design, social media posts, branded tote bag, and stationery. Warm, trustworthy, and playful tones communicate care and professionalism in equal measure.',
     descTR: 'Bir evcil hayvan bakım işletmesi için kapsamlı marka kimliği sistemi — logo tasarımı, sosyal medya paylaşımları, markalı çanta ve kırtasiye. Sıcak ve güvenilir tonlar, özen ve profesyonelliği eşit ölçüde iletmektedir.',
@@ -140,11 +96,7 @@ const PROJECTS = [
     categoryLabel: 'Branding',
     categoryLabelTR: 'Marka Tasarımı',
     gradient: 'linear-gradient(135deg, #1a1000 0%, #2e1e00 100%)',
-    cover: p('PROJELER/Olebaby/ole_kartvizit.png'),
-    images: [
-      'PROJELER/Olebaby/ole_kartvizit.png',
-      'PROJELER/Olebaby/antetli_kagit.png',
-    ].map(p),
+    ...media('olebaby', 2),
     tools: ['illustrator'],
     desc: 'Brand identity design for Olebaby — business card and letterhead crafted with a clean, modern aesthetic. Typography and layout choices reflect the brand\'s character: approachable, refined, and memorable.',
     descTR: 'Olebaby için marka kimliği tasarımı — kartvizit ve antetli kağıt, temiz ve modern bir estetikle hazırlandı. Tipografi ve düzen seçimleri markanın karakterini yansıtıyor: ulaşılabilir, şık ve akılda kalıcı.',
@@ -158,13 +110,7 @@ const PROJECTS = [
     categoryLabel: 'Print',
     categoryLabelTR: 'Baskı Tasarımı',
     gradient: 'linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%)',
-    cover: p('PROJELER/poster/Betul_Alkan_Afis.jpg'),
-    images: [
-      'PROJELER/poster/Betul_Alkan_Afis.jpg',
-      'PROJELER/poster/mikroplastiklerafisi_eng.jpg',
-      'PROJELER/poster/sosyal-sorumluluk-afisi.jpg',
-      'PROJELER/poster/whatunitesusposter.jpg',
-    ].map(p),
+    ...media('poster', 4),
     tools: ['illustrator', 'photoshop'],
     desc: 'A series of social responsibility and environmental awareness posters exploring themes of microplastics, unity, and civic consciousness. Bold composition, strong typography, and purposeful color choices give each poster a voice that commands attention.',
     descTR: 'Mikroplastikler, birlik ve toplumsal farkındalık temalarını keşfeden sosyal sorumluluk ve çevre bilinci afiş serisi. Güçlü kompozisyon, belirgin tipografi ve bilinçli renk tercihleri her afişe dikkat çeken bir ses kazandırıyor.',
@@ -180,7 +126,8 @@ const PROJECTS = [
     gradient: 'linear-gradient(135deg, #000a1a 0%, #001430 100%)',
     cover: null,
     images: [],
-    video: p('PROJELER/after effects animasyon/art-contact.mp4'),
+    thumbs: [],
+    video: encodeURI('PROJELER/after effects animasyon/art-contact.mp4'),
     tools: ['after effects', 'premiere'],
     desc: 'A motion graphics piece produced in After Effects — fluid transitions, kinetic typography, and layered visual storytelling. Every frame was animated with precision to create a dynamic, engaging experience.',
     descTR: 'After Effects\'te üretilen motion graphics çalışması — akıcı geçişler, kinetik tipografi ve katmanlı görsel anlatım. Her kare, dinamik ve ilgi çekici bir deneyim yaratmak için hassasiyetle animasyona alındı.',
@@ -237,6 +184,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 ══════════════════════════════════════════════ */
 function applyLang(lang) {
   currentLang = lang;
+  document.documentElement.lang = lang;
 
   $$('[data-en]').forEach(el => {
     const text = el.dataset[lang];
@@ -468,6 +416,8 @@ function renderProjects(filter = 'all', toolFilter = null) {
       img.className = 'project-card__img';
       img.alt = title;
       img.loading = 'lazy';
+      img.decoding = 'async';
+      img.width = 500; img.height = 360;
       img.onerror = () => img.remove();
       img.src = proj.cover;
       card.appendChild(bigNum);
@@ -607,6 +557,7 @@ function openModal(proj) {
     mainImg.className = 'modal__gallery-img';
     mainImg.src = modalImages[0];
     mainImg.alt = title;
+    mainImg.decoding = 'async';
     mainImg.style.transition = 'opacity 0.15s ease';
     galleryWrap.appendChild(mainImg);
 
@@ -634,14 +585,16 @@ function openModal(proj) {
       /* Thumbnail strip */
       const thumbs = document.createElement('div');
       thumbs.className = 'modal__thumbs';
+      const thumbSrcs = proj.thumbs && proj.thumbs.length ? proj.thumbs : modalImages;
       modalImages.forEach((src, i) => {
         const th = document.createElement('button');
         th.className = 'modal__thumb' + (i === 0 ? ' active' : '');
         th.setAttribute('aria-label', `View image ${i + 1}`);
         const thImg = document.createElement('img');
-        thImg.src = src;
+        thImg.src = thumbSrcs[i] || src;
         thImg.alt = '';
         thImg.loading = 'lazy';
+        thImg.decoding = 'async';
         th.appendChild(thImg);
         th.addEventListener('click', e => { e.stopPropagation(); setModalImage(i); });
         thumbs.appendChild(th);

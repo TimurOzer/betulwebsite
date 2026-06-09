@@ -3,12 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Betül Alkan — Multidisciplinary Designer & Editor</title>
-  <meta name="description" content="Betül Alkan — Multidisciplinary Designer & Editor based in Istanbul. Branding, UI/UX, video editing, and visual storytelling." />
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- Primary SEO -->
+  <title>Betül Alkan — Multidisciplinary Designer &amp; Editor | Istanbul</title>
+  <meta name="description" content="Betül Alkan — multidisciplinary designer &amp; editor based in Istanbul. Branding, UI/UX design, video editing, and visual storytelling. View selected projects and get in touch." />
+  <meta name="keywords" content="Betül Alkan, designer, UI/UX, branding, video editor, motion graphics, Istanbul, portfolio, graphic design, Figma, Adobe" />
+  <meta name="author" content="Betül Alkan" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0e0022" />
+  <link rel="canonical" href="https://betulalkan.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Betül Alkan" />
+  <meta property="og:title" content="Betül Alkan — Multidisciplinary Designer &amp; Editor" />
+  <meta property="og:description" content="Branding, UI/UX, video editing, and visual storytelling — selected creative work by Istanbul-based designer Betül Alkan." />
+  <meta property="og:url" content="https://betulalkan.com/" />
+  <meta property="og:image" content="https://betulalkan.com/images/profile-photo.jpg" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="tr_TR" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Betül Alkan — Multidisciplinary Designer &amp; Editor" />
+  <meta name="twitter:description" content="Branding, UI/UX, video editing, and visual storytelling — selected creative work by Istanbul-based designer Betül Alkan." />
+  <meta name="twitter:image" content="https://betulalkan.com/images/profile-photo.jpg" />
+
+  <!-- Favicon (inline SVG, zero extra request) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0022'/%3E%3Ctext x='50' y='71' font-family='Georgia,serif' font-size='62' font-weight='700' fill='%23fff' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E" />
+
+  <!-- Performance: fonts + above-the-fold image -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="image" href="images/profile-photo.jpg" fetchpriority="high" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Betül Alkan",
+    "url": "https://betulalkan.com/",
+    "image": "https://betulalkan.com/images/profile-photo.jpg",
+    "jobTitle": "Multidisciplinary Designer & Editor",
+    "email": "mailto:betulalkan98@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Istanbul", "addressCountry": "TR" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Istanbul Gelişim University" },
+    "knowsAbout": ["Branding", "UI/UX Design", "Video Editing", "Motion Graphics", "Visual Storytelling"],
+    "sameAs": ["https://instagram.com/betullallkan"]
+  }
+  </script>
 </head>
 <body>
 
@@ -106,7 +152,7 @@
 
         <div class="hero__right reveal-right" style="--d:0.1s">
           <div class="hero__photo-frame">
-            <img src="images/profile-photo.jpeg" alt="Betül Alkan" class="hero__photo" />
+            <img src="images/profile-photo.jpg" alt="Betül Alkan — designer and editor" class="hero__photo" width="520" height="640" fetchpriority="high" decoding="async" />
             <div class="hero__photo-deco hero__photo-deco--1">
               <span class="deco-icon">✦</span>
               <span data-en="Design" data-tr="Tasarım">Design</span>
@@ -177,7 +223,7 @@
             <div class="about__tools reveal-up" style="--d:0.1s" id="aboutTools"></div>
 
             <div class="about__card reveal-up" style="--d:0.2s">
-              <img src="images/profile-photo.jpeg" alt="Betül Alkan" />
+              <img src="images/profile-photo.jpg" alt="Betül Alkan" width="120" height="120" loading="lazy" decoding="async" />
               <div class="about__card-info">
                 <strong>Betül Alkan</strong>
                 <span>Istanbul, Turkey</span>

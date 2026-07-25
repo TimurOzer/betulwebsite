@@ -76,8 +76,8 @@ const PROJECTS = [
   },
   {
     id: 7,
-    title: 'Social Awareness Posters',
-    titleTR: 'Sosyal Farkındalık Afişleri',
+    title: 'WUU7 Poster Design',
+    titleTR: 'WUU7 Poster Tasarımı',
     category: 'print',
     categoryLabel: 'Print',
     categoryLabelTR: 'Baskı Tasarımı',
@@ -133,8 +133,8 @@ const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after 
 
 /* ── Tool → projects mapping ──────────────── */
 const TOOL_CATEGORIES = {
-  'illustrator':   ['branding', 'print'],
-  'photoshop':     ['branding', 'print'],
+  'illustrator':   ['print'],
+  'photoshop':     ['print'],
   'adobe xd':      ['ux'],
   'figma':         ['ux'],
   'premiere':      ['motion'],

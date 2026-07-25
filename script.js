@@ -27,7 +27,7 @@ const PROJECTS = [
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #0e0022 0%, #1c0045 100%)',
     ...media('pigmentia', 17),
-    tools: ['adobe xd', 'figma'],
+    tools: ['adobe xd'],
     desc: 'A complete website design for Pigmentia — a modern color exploration and palette generation platform. Built user-first: clean navigation, accessible contrast tools, and a cohesive design system that balances aesthetic beauty with frictionless interaction.',
     descTR: 'Pigmentia için kapsamlı web sitesi tasarımı — modern renk keşif ve palet üretim platformu. Kullanıcı odaklı: temiz navigasyon, erişilebilir kontrast araçları ve estetik güzelliği sorunsuz etkileşimle dengeleyen tutarlı bir tasarım sistemi.',
     year: '2026'
@@ -41,7 +41,7 @@ const PROJECTS = [
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #080010 0%, #12001f 100%)',
     ...media('nox', 11),
-    tools: ['figma', 'adobe xd'],
+    tools: ['figma'],
     desc: 'A dark, immersive website design for Nox — a bold visual identity brought to life through deep contrast, refined typography, and a meticulously layered UI. Every screen was designed to evoke atmosphere while maintaining clear usability.',
     descTR: 'Nox için koyu, sürükleyici bir web sitesi tasarımı — güçlü bir görsel kimlik, derin kontrast, rafine tipografi ve katmanlı bir arayüzle hayata geçirildi. Her ekran, net kullanılabilirliği korurken atmosfer yaratmak için tasarlandı.',
     year: '2025'
@@ -55,7 +55,7 @@ const PROJECTS = [
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #001a10 0%, #002818 100%)',
     ...media('catch', 6),
-    tools: ['adobe xd', 'illustrator'],
+    tools: ['illustrator'],
     desc: 'Full UI design for Catch — a mobile game experience including main menu, HUD, level screens, and end states. The interface was crafted to feel intuitive and energetic, keeping players engaged with clear visual feedback at every moment.',
     descTR: 'Catch için tam UI tasarımı — ana menü, HUD, level ekranları ve bitiş ekranları dahil mobil oyun arayüzü. Arayüz, her an net görsel geri bildirimle oyuncuları bağlı tutan sezgisel ve enerjik bir his verecek şekilde tasarlandı.',
     year: '2025'
@@ -69,7 +69,7 @@ const PROJECTS = [
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #001830 0%, #002448 100%)',
     ...media('igu-obis', 2),
-    tools: ['figma'],
+    tools: ['adobe xd'],
     desc: 'A modern redesign of Istanbul Gelişim University\'s OBIS student portal. The goal was to simplify complex academic workflows into a clean, accessible interface — reducing friction for students navigating course registrations, grades, and schedules.',
     descTR: 'İstanbul Gelişim Üniversitesi\'nin OBIS öğrenci portalının modern yeniden tasarımı. Amaç, karmaşık akademik süreçleri temiz ve erişilebilir bir arayüze dönüştürmek — ders kayıt, not ve program takibinde öğrencilerin yaşadığı zorluğu azaltmak.',
     year: '2026'
@@ -111,7 +111,7 @@ const PROJECTS = [
     categoryLabelTR: 'Baskı Tasarımı',
     gradient: 'linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%)',
     ...media('poster', 4),
-    tools: ['illustrator', 'photoshop'],
+    tools: ['illustrator'],
     desc: 'A series of social responsibility and environmental awareness posters exploring themes of microplastics, unity, and civic consciousness. Bold composition, strong typography, and purposeful color choices give each poster a voice that commands attention.',
     descTR: 'Mikroplastikler, birlik ve toplumsal farkındalık temalarını keşfeden sosyal sorumluluk ve çevre bilinci afiş serisi. Güçlü kompozisyon, belirgin tipografi ve bilinçli renk tercihleri her afişe dikkat çeken bir ses kazandırıyor.',
     year: '2025'
@@ -128,7 +128,7 @@ const PROJECTS = [
     images: [],
     thumbs: [],
     video: encodeURI('PROJELER/after effects animasyon/art-contact.mp4'),
-    tools: ['after effects', 'premiere'],
+    tools: ['after effects'],
     desc: 'A motion graphics piece produced in After Effects — fluid transitions, kinetic typography, and layered visual storytelling. Every frame was animated with precision to create a dynamic, engaging experience.',
     descTR: 'After Effects\'te üretilen motion graphics çalışması — akıcı geçişler, kinetik tipografi ve katmanlı görsel anlatım. Her kare, dinamik ve ilgi çekici bir deneyim yaratmak için hassasiyetle animasyona alındı.',
     year: '2025'
@@ -155,7 +155,7 @@ const TOOL_NAMES = {
   'figma':         'Figma',
 };
 
-const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma', 'lightroom'];
+const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma'];
 
 /* ── Tool → projects mapping ──────────────── */
 const TOOL_CATEGORIES = {
@@ -673,7 +673,7 @@ function initContactForm() {
   const successEl = $('#formSuccess');
   if (!form) return;
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const name  = $('#f-name').value.trim();
     const email = $('#f-email').value.trim();
@@ -692,7 +692,20 @@ function initContactForm() {
     const btn = form.querySelector('.c-form__submit');
     if (btn) btn.disabled = true;
 
-    setTimeout(() => {
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/betulalkan98@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          message: msg,
+          _subject: `New portfolio message from ${name}`
+        })
+      });
+
+      if (!res.ok) throw new Error('Request failed');
+
       form.reset();
       if (successEl) {
         successEl.style.color = '';
@@ -700,9 +713,17 @@ function initContactForm() {
           ? 'Mesajınız gönderildi! En kısa sürede geri döneceğim.'
           : 'Message sent! I\'ll get back to you shortly.';
       }
+    } catch (err) {
+      if (successEl) {
+        successEl.style.color = '#ff6b6b';
+        successEl.textContent = currentLang === 'tr'
+          ? 'Mesaj gönderilemedi, lütfen tekrar deneyin.'
+          : 'Message failed to send, please try again.';
+      }
+    } finally {
       if (btn) btn.disabled = false;
       setTimeout(() => { if (successEl) successEl.textContent = ''; }, 5000);
-    }, 800);
+    }
   });
 }
 

@@ -77,7 +77,8 @@ var SITE_CONTENT = {
       links: [
         { text: "betulalkan98@gmail.com", href: "mailto:betulalkan98@gmail.com" },
         { text: "Instagram",             href: "#" },
-        { text: "Behance",               href: "#" }
+        { text: "LinkedIn",              href: "https://www.linkedin.com/in/bet%C3%BCl-alkan-22a46733b" },
+        { text: "Behance",               href: "https://www.behance.net/betlalkan4/moodboards" }
       ],
       footerCopyright: "© 2026 Betül®",
       footerLocation: "Istanbul, Türkiye",
@@ -169,7 +170,8 @@ var SITE_CONTENT = {
       links: [
         { text: "betulalkan98@gmail.com", href: "mailto:betulalkan98@gmail.com" },
         { text: "Instagram",             href: "#" },
-        { text: "Behance",               href: "#" }
+        { text: "LinkedIn",              href: "https://www.linkedin.com/in/bet%C3%BCl-alkan-22a46733b" },
+        { text: "Behance",               href: "https://www.behance.net/betlalkan4/moodboards" }
       ],
       footerCopyright: "© 2026 Betül®",
       footerLocation: "İstanbul, Türkiye",

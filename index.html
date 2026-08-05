@@ -5,38 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
-  <title>Betül Alkan — Multidisciplinary Designer &amp; Editor | Istanbul</title>
-  <meta name="description" content="Betül Alkan — multidisciplinary designer &amp; editor based in Istanbul. Branding, UI/UX design, video editing, and visual storytelling. View selected projects and get in touch." />
+  <title>Betül Alkan — UI/UX Designer &amp; Editor | Istanbul</title>
+  <meta name="description" content="Betül Alkan — UI/UX designer and editor based in Istanbul. Explore my tools and selected projects, or get in touch." />
   <meta name="keywords" content="Betül Alkan, designer, UI/UX, branding, video editor, motion graphics, Istanbul, portfolio, graphic design, Figma, Adobe" />
   <meta name="author" content="Betül Alkan" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0e0022" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="canonical" href="https://betulalkan.com/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Betül Alkan" />
-  <meta property="og:title" content="Betül Alkan — Multidisciplinary Designer &amp; Editor" />
-  <meta property="og:description" content="Branding, UI/UX, video editing, and visual storytelling — selected creative work by Istanbul-based designer Betül Alkan." />
+  <meta property="og:title" content="Betül Alkan — UI/UX Designer &amp; Editor" />
+  <meta property="og:description" content="Explore my tools and selected projects, or get in touch." />
   <meta property="og:url" content="https://betulalkan.com/" />
   <meta property="og:image" content="https://betulalkan.com/images/profile-photo.jpg" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="tr_TR" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Betül Alkan — Multidisciplinary Designer &amp; Editor" />
-  <meta name="twitter:description" content="Branding, UI/UX, video editing, and visual storytelling — selected creative work by Istanbul-based designer Betül Alkan." />
+  <meta name="twitter:title" content="Betül Alkan — UI/UX Designer &amp; Editor" />
+  <meta name="twitter:description" content="Explore my tools and selected projects, or get in touch." />
   <meta name="twitter:image" content="https://betulalkan.com/images/profile-photo.jpg" />
 
   <!-- Favicon (inline SVG, zero extra request) -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0022'/%3E%3Ctext x='50' y='71' font-family='Georgia,serif' font-size='62' font-weight='700' fill='%23fff' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000'/%3E%3Ctext x='50' y='71' font-family='Georgia,serif' font-size='62' font-weight='700' fill='%23fff' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E" />
 
-  <!-- Performance: fonts + above-the-fold image -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="image" href="images/profile-photo.jpg" fetchpriority="high" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 
   <!-- Structured data -->
@@ -47,308 +45,103 @@
     "name": "Betül Alkan",
     "url": "https://betulalkan.com/",
     "image": "https://betulalkan.com/images/profile-photo.jpg",
-    "jobTitle": "Multidisciplinary Designer & Editor",
+    "jobTitle": "UI/UX Designer & Editor",
     "email": "mailto:betulalkan98@gmail.com",
     "address": { "@type": "PostalAddress", "addressLocality": "Istanbul", "addressCountry": "TR" },
     "alumniOf": { "@type": "CollegeOrUniversity", "name": "Istanbul Gelişim University" },
-    "knowsAbout": ["Branding", "UI/UX Design", "Video Editing", "Motion Graphics", "Visual Storytelling"],
-    "sameAs": ["https://instagram.com/betullallkan"]
+    "knowsAbout": ["Branding", "UI/UX Design", "Video Editing", "Motion Graphics", "Visual Storytelling"]
   }
   </script>
 </head>
 <body>
 
-  <!-- CURSOR -->
-  <div class="cursor" id="cursor"></div>
+  <main class="stage" id="stage" data-view="idle">
 
-  <!-- NAV -->
-  <header class="nav" id="nav">
-    <a href="#home" class="nav__logo">Betül<sup>®</sup></a>
-    <nav class="nav__links" aria-label="Main navigation">
-      <a href="#home"    class="nav-link" data-section="home">Home</a>
-      <a href="#about"   class="nav-link" data-section="about">About</a>
-      <a href="#work"    class="nav-link" data-section="work">Work</a>
-      <a href="#contact" class="nav-link" data-section="contact">Contact</a>
-    </nav>
-    <div class="nav__actions">
-      <button class="lang-btn" id="langBtn" aria-label="Switch language">TR</button>
-      <a href="BetulCV.pdf" download class="btn-cv" id="navCvBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        <span data-en="Download CV" data-tr="CV İndir">Download CV</span>
-      </a>
-      <button class="nav__burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
+    <!-- Hero (title/subtitle/pill reposition per view via CSS) -->
+    <h1 class="hero-title">Hi, I&rsquo;m Betül</h1>
+    <p class="hero-subtitle">I design user-friendly interfaces and engaging digital experiences.</p>
+
+    <div class="pill" id="pill">
+      <button class="pill__toggle" id="pillToggle" type="button" aria-haspopup="listbox" aria-expanded="false">
+        <span class="pill__my">My</span>
+        <span class="pill__seg">
+          <span id="pillCurrent">Tools</span>
+          <svg class="chevron" width="14" height="9" viewBox="0 0 14 9" fill="none" aria-hidden="true">
+            <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </button>
+      <ul class="pill-menu" id="pillMenu" role="listbox" hidden>
+        <li role="option" data-view="tools">Tools</li>
+        <li role="option" data-view="projects">Projects</li>
+        <li role="option" aria-disabled="true">Abilities <span class="soon">Soon</span></li>
+        <li role="option" aria-disabled="true">Intelligences <span class="soon">Soon</span></li>
+        <li role="option" aria-disabled="true">Education <span class="soon">Soon</span></li>
+        <li role="option" aria-disabled="true">Experience <span class="soon">Soon</span></li>
+        <li role="option" aria-disabled="true">Story <span class="soon">Soon</span></li>
+      </ul>
+    </div>
+
+    <!-- IDLE: doodle decorations -->
+    <div class="doodles" id="doodles" aria-hidden="true">
+      <div class="dot-grid"></div>
+      <img class="doodle doodle--star"   src="images/decor/star.svg"   alt="" />
+      <img class="doodle doodle--crown"  src="images/decor/crown.svg"  alt="" />
+      <img class="doodle doodle--motion-a" src="images/decor/motion-a.svg" alt="" />
+      <img class="doodle doodle--motion-b" src="images/decor/motion-b.svg" alt="" />
+      <img class="doodle doodle--motion-c" src="images/decor/motion-c.svg" alt="" />
+      <img class="doodle doodle--pen"    src="images/decor/pen.svg"    alt="" />
+      <img class="doodle doodle--heart-a" src="images/decor/heart-a.svg" alt="" />
+      <img class="doodle doodle--heart-b" src="images/decor/heart-b.svg" alt="" />
+      <img class="doodle doodle--plane-body" src="images/decor/plane-body.svg" alt="" />
+      <img class="doodle doodle--plane-fin"  src="images/decor/plane-fin.svg"  alt="" />
+      <img class="doodle doodle--plane-trail" src="images/decor/plane-trail.svg" alt="" />
+    </div>
+
+    <!-- TOOLS -->
+    <div class="tools-view" id="toolsView">
+      <a class="contact-link" href="mailto:betulalkan98@gmail.com">Contact me</a>
+      <img class="tools-arc-bg" src="images/decor/tools-arc.svg" alt="" />
+      <div class="tool-icon tool-icon--xd">
+        <img src="images/logo-adobe-xd.png" alt="Adobe XD" />
+      </div>
+      <div class="tool-icon tool-icon--ps">
+        <img src="images/logo-photoshop.png" alt="Adobe Photoshop" />
+      </div>
+      <div class="tool-icon tool-icon--ai">
+        <img src="images/logo-illustrator.png" alt="Adobe Illustrator" />
+      </div>
+      <div class="tool-icon tool-icon--ae">
+        <img src="images/logo-after-effects.png" alt="Adobe After Effects" />
+      </div>
+      <div class="tool-icon tool-icon--pr">
+        <img src="images/logo-premiere.png" alt="Adobe Premiere Pro" />
+      </div>
+      <div class="tool-icon tool-icon--figma">
+        <img src="images/logo-figma.png" alt="Figma" />
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="projects-view" id="projectsView">
+      <button class="carousel-arrow carousel-arrow--prev" id="carPrev" type="button" aria-label="Previous project">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M11 3L5 9L11 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <div class="carousel-track" id="carouselTrack"></div>
+      <button class="carousel-arrow carousel-arrow--next" id="carNext" type="button" aria-label="Next project">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M7 3L13 9L7 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
       </button>
     </div>
-  </header>
-
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-    <a href="#home"    class="mobile-link" data-en="Home"    data-tr="Ana Sayfa">Home</a>
-    <a href="#about"   class="mobile-link" data-en="About"   data-tr="Hakkımda">About</a>
-    <a href="#work"    class="mobile-link" data-en="Work"    data-tr="Projeler">Work</a>
-    <a href="#contact" class="mobile-link" data-en="Contact" data-tr="İletişim">Contact</a>
-    <a href="BetulCV.pdf" download class="mobile-cv" data-en="Download CV ↓" data-tr="CV İndir ↓">Download CV ↓</a>
-  </div>
-
-  <main>
-
-    <!-- ══════════════ HERO ══════════════ -->
-    <section id="home" class="hero">
-      <div class="hero__inner">
-
-        <div class="hero__left">
-          <div class="hero__tag reveal-up">
-            <span class="tag-pulse"></span>
-            <span data-en="Multidisciplinary Designer &amp; Editor" data-tr="Disiplinlerarası Tasarımcı &amp; Editör">
-              Multidisciplinary Designer &amp; Editor
-            </span>
-          </div>
-
-          <h1 class="hero__name">
-            <span class="name-line reveal-up" style="--d:0.05s">Betül</span>
-            <span class="name-line reveal-up" style="--d:0.15s">Alkan</span>
-          </h1>
-
-          <p class="hero__bio reveal-up" style="--d:0.25s"
-             data-en="Istanbul Gelişim University Communication &amp; Design student. I blend branding, UI/UX, video editing, and visual storytelling into bold, purposeful creative work."
-             data-tr="İstanbul Gelişim Üniversitesi İletişim ve Tasarım öğrencisi. Marka kimliği, arayüz tasarımı, video kurgu ve görsel hikaye anlatıcılığını cesur ve anlamlı işlere dönüştürüyorum.">
-            Istanbul Gelişim University Communication &amp; Design student. I blend branding, UI/UX, video editing, and visual storytelling into bold, purposeful creative work.
-          </p>
-
-          <div class="hero__cta reveal-up" style="--d:0.35s">
-            <a href="BetulCV.pdf" download class="btn-primary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              <span data-en="Download CV" data-tr="CV İndir">Download CV</span>
-            </a>
-            <a href="#work" class="btn-outline" data-en="View My Work" data-tr="Projelerimi Gör">View My Work</a>
-          </div>
-
-          <div class="hero__stats reveal-up" style="--d:0.45s">
-            <div class="hero-stat">
-              <span class="hero-stat__num">3rd</span>
-              <span class="hero-stat__label" data-en="Year Student" data-tr="Sınıf Öğrencisi">Year Student</span>
-            </div>
-            <div class="hero-stat__sep"></div>
-            <div class="hero-stat">
-              <span class="hero-stat__num">10+</span>
-              <span class="hero-stat__label" data-en="Creative Tools" data-tr="Yaratıcı Araç">Creative Tools</span>
-            </div>
-            <div class="hero-stat__sep"></div>
-            <div class="hero-stat">
-              <span class="hero-stat__num">6+</span>
-              <span class="hero-stat__label" data-en="Projects" data-tr="Proje">Projects</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero__right reveal-right" style="--d:0.1s">
-          <div class="hero__photo-frame">
-            <img src="images/profile-photo.jpg" alt="Betül Alkan — designer and editor" class="hero__photo" width="520" height="640" fetchpriority="high" decoding="async" />
-            <div class="hero__photo-deco hero__photo-deco--1">
-              <span class="deco-icon">✦</span>
-              <span data-en="Design" data-tr="Tasarım">Design</span>
-            </div>
-            <div class="hero__photo-deco hero__photo-deco--2">
-              <span class="deco-icon">▲</span>
-              <span data-en="Video" data-tr="Video">Video</span>
-            </div>
-            <div class="hero__photo-accent"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="hero__scroll">
-        <span data-en="Scroll to explore" data-tr="Keşfetmek için kaydır">Scroll to explore</span>
-        <div class="scroll-track"><div class="scroll-thumb"></div></div>
-      </div>
-    </section>
-
-    <!-- ══════════════ ABOUT ══════════════ -->
-    <section id="about" class="about">
-      <div class="about__inner">
-
-        <div class="about__header">
-          <span class="eyebrow reveal-up" data-en="— 01 / About Me" data-tr="— 01 / Hakkımda">— 01 / About Me</span>
-          <h2 class="section-title reveal-up" style="--d:0.1s"
-              data-en="Behind<br>the screens." data-tr="Ekranların<br>arkasında.">
-            Behind<br>the screens.
-          </h2>
-        </div>
-
-        <div class="about__body">
-          <div class="about__text">
-            <p class="about__bio reveal-up"
-               data-en="I'm a Communication and Design junior at Istanbul Gelişim University, driven by an endless curiosity for digital storytelling. My playground ranges from brand identities and user interfaces to full-scale video production."
-               data-tr="İstanbul Gelişim Üniversitesi İletişim ve Tasarım bölümünde 3. sınıf öğrencisiyim; dijital hikaye anlatıcılığına duyduğum merak hiç bitmiyor. Marka kimliklerinden kullanıcı arayüzlerine, tam kapsamlı video prodüksiyonuna uzanan geniş bir alanda çalışıyorum.">
-              I'm a Communication and Design junior at Istanbul Gelişim University, driven by an endless curiosity for digital storytelling. My playground ranges from brand identities and user interfaces to full-scale video production.
-            </p>
-            <p class="about__bio reveal-up" style="--d:0.1s"
-               data-en="With full command of the Adobe Creative Suite, Figma, and Final Cut Pro, I combine technical precision with bold, out-of-the-box thinking to bring ambitious visions to life."
-               data-tr="Adobe Creative Suite, Figma ve Final Cut Pro'ya tam hakimiyetle; teknik titizliği cesur ve özgün düşünceyle harmanlayarak iddialı vizyonları somut işlere dönüştürüyorum.">
-              With full command of the Adobe Creative Suite, Figma, and Final Cut Pro, I combine technical precision with bold, out-of-the-box thinking to bring ambitious visions to life.
-            </p>
-
-            <div class="about__stats reveal-up" style="--d:0.2s">
-              <div class="a-stat">
-                <span class="a-stat__num">3rd</span>
-                <span class="a-stat__label" data-en="Year Uni Student" data-tr="Sınıf Öğrencisi">Year Uni Student</span>
-              </div>
-              <div class="a-stat">
-                <span class="a-stat__num">10+</span>
-                <span class="a-stat__label" data-en="Creative Tools" data-tr="Yaratıcı Araç">Creative Tools</span>
-              </div>
-              <div class="a-stat">
-                <span class="a-stat__num">100%</span>
-                <span class="a-stat__label" data-en="Creative Energy" data-tr="Yaratıcı Enerji">Creative Energy</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="about__tools-col">
-            <p class="tools-hint reveal-up"
-               data-en="Click a tool to filter projects ↴"
-               data-tr="Araçlara tıklayarak projeleri filtreleyin ↴">
-               Click a tool to filter projects ↴
-            </p>
-            <div class="about__tools reveal-up" style="--d:0.1s" id="aboutTools"></div>
-
-            <div class="about__card reveal-up" style="--d:0.2s">
-              <img src="images/profile-photo.jpg" alt="Betül Alkan" width="120" height="120" loading="lazy" decoding="async" />
-              <div class="about__card-info">
-                <strong>Betül Alkan</strong>
-                <span>Istanbul, Turkey</span>
-                <a href="mailto:betulalkan98@gmail.com">betulalkan98@gmail.com</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══════════════ WORK ══════════════ -->
-    <section id="work" class="work">
-      <div class="work__inner">
-
-        <div class="work__header">
-          <div>
-            <span class="eyebrow eyebrow--light reveal-up" data-en="— 02 / Work" data-tr="— 02 / Çalışmalar">— 02 / Work</span>
-            <h2 class="section-title section-title--light reveal-up" style="--d:0.1s"
-                data-en="Selected<br>Projects." data-tr="Seçilmiş<br>Projeler.">
-              Selected<br>Projects.
-            </h2>
-          </div>
-          <p class="work__hint reveal-up" style="--d:0.2s"
-             data-en="Click any project to inspect details &amp; tools used."
-             data-tr="Detayları ve kullanılan araçları görmek için projeye tıklayın.">
-            Click any project to inspect details &amp; tools used.
-          </p>
-        </div>
-
-        <div class="work__filters reveal-up" id="workFilters">
-          <button class="filter-btn active" data-filter="all"      data-en="All"       data-tr="Tümü">All</button>
-          <button class="filter-btn" data-filter="ux"              data-en="UI/UX"     data-tr="Arayüz">UI/UX</button>
-          <button class="filter-btn" data-filter="print"           data-en="Print"     data-tr="Baskı">Print</button>
-          <button class="filter-btn" data-filter="motion"          data-en="Motion"    data-tr="Animasyon">Motion</button>
-        </div>
-
-        <div class="work__grid" id="workGrid">
-          <!-- populated by script.js -->
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══════════════ CONTACT ══════════════ -->
-    <section id="contact" class="contact">
-      <div class="contact__inner">
-
-        <div class="contact__left">
-          <span class="eyebrow eyebrow--light reveal-up" data-en="— 03 / Contact" data-tr="— 03 / İletişim">— 03 / Contact</span>
-          <h2 class="section-title section-title--light reveal-up" style="--d:0.1s">
-            <span data-en="Let's build something" data-tr="Birlikte olağanüstü">Let's build something</span><br>
-            <em data-en="extraordinary." data-tr="bir şey yaratalım.">extraordinary.</em>
-          </h2>
-          <p class="contact__sub reveal-up" style="--d:0.2s"
-             data-en="Always open to freelance projects, creative collaborations, and exciting opportunities."
-             data-tr="Freelance projeler, yaratıcı iş birlikleri ve heyecan verici fırsatlara her zaman açığım.">
-            Always open to freelance projects, creative collaborations, and exciting opportunities.
-          </p>
-
-          <div class="contact__links reveal-up" style="--d:0.3s">
-            <a href="mailto:betulalkan98@gmail.com" class="c-link">
-              <span class="c-link__label">Email</span>
-              <span class="c-link__text">betulalkan98@gmail.com</span>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener" class="c-link">
-              <span class="c-link__label">Instagram</span>
-              <span class="c-link__text">@betullallkan</span>
-            </a>
-            <a href="https://www.linkedin.com/in/bet%C3%BCl-alkan-22a46733b" target="_blank" rel="noopener" class="c-link">
-              <span class="c-link__label">LinkedIn</span>
-              <span class="c-link__text">Betül Alkan</span>
-            </a>
-            <a href="https://www.behance.net/betlalkan4/moodboards" target="_blank" rel="noopener" class="c-link">
-              <span class="c-link__label">Behance</span>
-              <span class="c-link__text">betlalkan4</span>
-            </a>
-          </div>
-
-          <div class="contact__footer reveal-up" style="--d:0.4s">
-            <span>© 2026 Betül Alkan</span>
-            <span>Istanbul, Türkiye</span>
-          </div>
-        </div>
-
-        <div class="contact__right reveal-up" style="--d:0.15s">
-          <form class="c-form" id="contactForm" novalidate>
-            <div class="c-form__group">
-              <label for="f-name" data-en="Your name" data-tr="Adınız">Your name</label>
-              <input type="text" id="f-name" placeholder="Your Name" autocomplete="name" />
-            </div>
-            <div class="c-form__group">
-              <label for="f-email" data-en="Email" data-tr="E-posta">Email</label>
-              <input type="email" id="f-email" placeholder="hello@example.com" autocomplete="email" />
-            </div>
-            <div class="c-form__group">
-              <label for="f-msg" data-en="Message" data-tr="Mesaj">Message</label>
-              <textarea id="f-msg" rows="5" placeholder="Tell me about your project…"></textarea>
-            </div>
-            <button type="submit" class="c-form__submit">
-              <span data-en="Send message" data-tr="Mesaj gönder">Send message</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </button>
-            <div class="c-form__success" id="formSuccess" aria-live="polite"></div>
-          </form>
-        </div>
-
-      </div>
-    </section>
 
   </main>
 
-  <!-- PROJECT MODAL -->
-  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Project detail">
-    <div class="modal" id="modal">
-      <button class="modal__close" id="modalClose" aria-label="Close">✕</button>
-      <div class="modal__img-wrap" id="modalImg"></div>
-      <div class="modal__info" id="modalInfo"></div>
-    </div>
+  <!-- PROJECT DETAIL OVERLAY -->
+  <div class="detail-overlay" id="detailOverlay" hidden>
+    <button class="detail-close" id="detailClose" type="button" aria-label="Close">&times;</button>
+    <div class="detail-body" id="detailBody"></div>
   </div>
 
+  <script src="projects-data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

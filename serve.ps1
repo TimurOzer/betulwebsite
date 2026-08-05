@@ -27,6 +27,7 @@ while ($listener.IsListening) {
         '.mp4'  { 'video/mp4' }
         '.pdf'  { 'application/pdf' }
         '.ico'  { 'image/x-icon' }
+        '.svg'  { 'image/svg+xml' }
         default { 'application/octet-stream' }
       }
       $bytes = [IO.File]::ReadAllBytes($filePath)

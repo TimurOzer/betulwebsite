@@ -50,9 +50,13 @@
     "jobTitle": "Multidisciplinary Designer & Editor",
     "email": "mailto:betulalkan98@gmail.com",
     "address": { "@type": "PostalAddress", "addressLocality": "Istanbul", "addressCountry": "TR" },
-    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Istanbul Gelişim University" },
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Istanbul Gelişim University" },
     "knowsAbout": ["Branding", "UI/UX Design", "Video Editing", "Motion Graphics", "Visual Storytelling"],
-    "sameAs": ["https://instagram.com/betullallkan"]
+    "sameAs": [
+      "https://instagram.com/betullallkan",
+      "https://www.linkedin.com/in/bet%C3%BCl-alkan-22a46733b",
+      "https://www.behance.net/betlalkan4"
+    ]
   }
   </script>
 </head>
@@ -134,7 +138,7 @@
 
           <div class="hero__stats reveal-up" style="--d:0.45s">
             <div class="hero-stat">
-              <span class="hero-stat__num">3rd</span>
+              <span class="hero-stat__num" data-en="3rd" data-tr="3.">3rd</span>
               <span class="hero-stat__label" data-en="Year Student" data-tr="Sınıf Öğrencisi">Year Student</span>
             </div>
             <div class="hero-stat__sep"></div>
@@ -144,7 +148,7 @@
             </div>
             <div class="hero-stat__sep"></div>
             <div class="hero-stat">
-              <span class="hero-stat__num">6+</span>
+              <span class="hero-stat__num" id="statProjects">6+</span>
               <span class="hero-stat__label" data-en="Projects" data-tr="Proje">Projects</span>
             </div>
           </div>
@@ -200,7 +204,7 @@
 
             <div class="about__stats reveal-up" style="--d:0.2s">
               <div class="a-stat">
-                <span class="a-stat__num">3rd</span>
+                <span class="a-stat__num" data-en="3rd" data-tr="3.">3rd</span>
                 <span class="a-stat__label" data-en="Year Uni Student" data-tr="Sınıf Öğrencisi">Year Uni Student</span>
               </div>
               <div class="a-stat">
@@ -255,12 +259,14 @@
           </p>
         </div>
 
-        <div class="work__filters reveal-up" id="workFilters">
-          <button class="filter-btn active" data-filter="all"      data-en="All"       data-tr="Tümü">All</button>
-          <button class="filter-btn" data-filter="ux"              data-en="UI/UX"     data-tr="Arayüz">UI/UX</button>
-          <button class="filter-btn" data-filter="print"           data-en="Print"     data-tr="Baskı">Print</button>
-          <button class="filter-btn" data-filter="motion"          data-en="Motion"    data-tr="Animasyon">Motion</button>
+        <div class="work__filters reveal-up" id="workFilters" role="group" aria-label="Filter projects by category">
+          <button class="filter-btn active" data-filter="all" aria-pressed="true"      data-en="All"       data-tr="Tümü">All</button>
+          <button class="filter-btn" data-filter="ux" aria-pressed="false"              data-en="UI/UX"     data-tr="Arayüz">UI/UX</button>
+          <button class="filter-btn" data-filter="print" aria-pressed="false"           data-en="Print"     data-tr="Baskı">Print</button>
+          <button class="filter-btn" data-filter="motion" aria-pressed="false"          data-en="Motion"    data-tr="Animasyon">Motion</button>
         </div>
+
+        <div class="work__activefilter" id="workActiveFilter" hidden></div>
 
         <div class="work__grid" id="workGrid">
           <!-- populated by script.js -->
@@ -290,7 +296,7 @@
               <span class="c-link__label">Email</span>
               <span class="c-link__text">betulalkan98@gmail.com</span>
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener" class="c-link">
+            <a href="https://instagram.com/betullallkan" target="_blank" rel="noopener" class="c-link">
               <span class="c-link__label">Instagram</span>
               <span class="c-link__text">@betullallkan</span>
             </a>
@@ -305,7 +311,7 @@
           </div>
 
           <div class="contact__footer reveal-up" style="--d:0.4s">
-            <span>© 2026 Betül Alkan</span>
+            <span>© <span id="footerYear">2026</span> Betül Alkan</span>
             <span>Istanbul, Türkiye</span>
           </div>
         </div>
@@ -314,15 +320,15 @@
           <form class="c-form" id="contactForm" novalidate>
             <div class="c-form__group">
               <label for="f-name" data-en="Your name" data-tr="Adınız">Your name</label>
-              <input type="text" id="f-name" placeholder="Your Name" autocomplete="name" />
+              <input type="text" id="f-name" placeholder="Your Name" autocomplete="name" required />
             </div>
             <div class="c-form__group">
               <label for="f-email" data-en="Email" data-tr="E-posta">Email</label>
-              <input type="email" id="f-email" placeholder="hello@example.com" autocomplete="email" />
+              <input type="email" id="f-email" placeholder="hello@example.com" autocomplete="email" required />
             </div>
             <div class="c-form__group">
               <label for="f-msg" data-en="Message" data-tr="Mesaj">Message</label>
-              <textarea id="f-msg" rows="5" placeholder="Tell me about your project…"></textarea>
+              <textarea id="f-msg" rows="5" placeholder="Tell me about your project…" required></textarea>
             </div>
             <button type="submit" class="c-form__submit">
               <span data-en="Send message" data-tr="Mesaj gönder">Send message</span>
@@ -341,7 +347,8 @@
   </main>
 
   <!-- PROJECT MODAL -->
-  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Project detail">
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true"
+       aria-labelledby="modalTitle" aria-hidden="true" hidden>
     <div class="modal" id="modal">
       <button class="modal__close" id="modalClose" aria-label="Close">✕</button>
       <div class="modal__img-wrap" id="modalImg"></div>

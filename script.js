@@ -165,16 +165,10 @@ const TOOL_NAMES = {
 
 const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma'];
 
-/* ── Tool → projects mapping ──────────────── */
-const TOOL_CATEGORIES = {
-  'illustrator':   ['print'],
-  'photoshop':     ['print'],
-  'adobe xd':      ['ux'],
-  'figma':         ['ux'],
-  'premiere':      ['motion'],
-  'after effects': ['motion'],
-  'lightroom':     ['print'],
-};
+/* How many projects actually credit each tool. */
+function projectsUsingTool(tool) {
+  return PROJECTS.filter(p => p.tools.includes(tool)).length;
+}
 
 /* ── State ─────────────────────────────────── */
 let currentLang      = 'en';
@@ -182,17 +176,38 @@ let activeFilter     = 'all';
 let activeToolFilter = null;
 let modalImgIndex    = 0;
 let modalImages      = [];
+let lastFocused      = null;
 
 /* ── Helpers ───────────────────────────────── */
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
+/* Keep the headline numbers tied to the data instead of a stale literal. */
+function syncStats() {
+  const projectsEl = $('#statProjects');
+  if (projectsEl) projectsEl.textContent = String(PROJECTS.length);
+
+  const yearEl = $('#footerYear');
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+}
+
 /* ══════════════════════════════════════════════
    LANGUAGE
 ══════════════════════════════════════════════ */
+const LANG_KEY = 'ba-lang';
+
+function preferredLang() {
+  try {
+    const saved = localStorage.getItem(LANG_KEY);
+    if (saved === 'en' || saved === 'tr') return saved;
+  } catch (e) { /* private mode */ }
+  return (navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en';
+}
+
 function applyLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* private mode */ }
 
   $$('[data-en]').forEach(el => {
     const text = el.dataset[lang];
@@ -212,7 +227,9 @@ function applyLang(lang) {
   const mobileCv = $('.mobile-cv');
   if (mobileCv) mobileCv.textContent = lang === 'tr' ? 'CV İndir ↓' : 'Download CV ↓';
 
+  initAboutTools();
   renderProjects(activeFilter, activeToolFilter);
+  syncStats();
 
   const btn = $('#langBtn');
   if (btn) btn.textContent = lang === 'en' ? 'TR' : 'EN';
@@ -231,14 +248,22 @@ function initNav() {
   const sections  = $$('section[id]');
   const navLinks  = $$('.nav-link');
 
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === e.target.id));
+  /* A 0.4 threshold can never be met by a section taller than 2.5 viewports —
+     Work simply never lit up. Track whichever section owns the viewport
+     midpoint instead, which works at any section height. */
+  const markActive = () => {
+    const line = window.scrollY + window.innerHeight * 0.4;
+    let current = sections[0];
+    sections.forEach(sec => { if (sec.offsetTop <= line) current = sec; });
+    navLinks.forEach(l => {
+      const on = l.dataset.section === current?.id;
+      l.classList.toggle('active', on);
+      l.setAttribute('aria-current', on ? 'true' : 'false');
     });
-  }, { threshold: 0.4 });
-
-  sections.forEach(s => io.observe(s));
+  };
+  window.addEventListener('scroll', markActive, { passive: true });
+  window.addEventListener('resize', markActive, { passive: true });
+  markActive();
 
   $$('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
@@ -278,6 +303,13 @@ function closeMobileMenu() {
 function initReveal() {
   const els = $$('.reveal-up, .reveal-right');
   if (!els.length) return;
+
+  /* Without the observer these elements would stay at opacity 0 forever. */
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
@@ -307,10 +339,21 @@ function initCursor() {
   };
   raf = requestAnimationFrame(tick);
 
-  $$('a, button, .project-card, .tool-btn, .filter-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  /* Delegated: project cards are rebuilt on every filter change, so
+     listeners bound once at startup were lost after the first click. */
+  const INTERACTIVE = 'a, button, .project-card, .tool-btn, .filter-btn, .filter-chip';
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(INTERACTIVE)) cursor.classList.add('grow');
   });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(INTERACTIVE) && !e.relatedTarget?.closest?.(INTERACTIVE)) {
+      cursor.classList.remove('grow');
+    }
+  });
+
+  /* The cursor is drawn by JS; hide it when the pointer leaves the page. */
+  document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
+  document.addEventListener('mouseenter', () => cursor.classList.remove('hidden'));
 }
 
 /* ══════════════════════════════════════════════
@@ -319,40 +362,69 @@ function initCursor() {
 function initAboutTools() {
   const wrap = $('#aboutTools');
   if (!wrap) return;
+  wrap.innerHTML = '';
 
   ABOUT_TOOLS.forEach(key => {
     const logo = TOOL_LOGOS[key];
     if (!logo) return;
 
+    const name  = TOOL_NAMES[key] || key;
+    const count = projectsUsingTool(key);
+
     const btn = document.createElement('button');
     btn.className = 'tool-btn';
+    btn.type = 'button';
     btn.dataset.tool = key;
-    btn.title = TOOL_NAMES[key] || key;
 
     const img = document.createElement('img');
     img.src = logo;
-    img.alt = TOOL_NAMES[key] || key;
+    img.alt = '';
     img.loading = 'lazy';
     btn.appendChild(img);
 
+    if (count > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'tool-btn__count';
+      badge.textContent = count;
+      btn.appendChild(badge);
+    } else {
+      /* No project credits this tool — keep it on show as a skill,
+         but don't offer a filter that can only come back empty. */
+      btn.classList.add('tool-btn--empty');
+      btn.disabled = true;
+    }
+
+    btn.title = count > 0
+      ? `${name} — ${count} ${currentLang === 'tr' ? 'proje' : count === 1 ? 'project' : 'projects'}`
+      : name;
+    btn.setAttribute('aria-label', btn.title);
+    if (key === activeToolFilter) {
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+    } else {
+      btn.setAttribute('aria-pressed', 'false');
+    }
+
     btn.addEventListener('click', () => {
       const isActive = btn.classList.contains('active');
-      $$('.tool-btn').forEach(b => b.classList.remove('active'));
+      $$('.tool-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
 
       if (isActive) {
         activeToolFilter = null;
         renderProjects(activeFilter, null);
-      } else {
-        btn.classList.add('active');
-        activeToolFilter = key;
-        document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => {
-          $$('.filter-btn').forEach(b => b.classList.remove('active'));
-          $('.filter-btn[data-filter="all"]')?.classList.add('active');
-          activeFilter = 'all';
-          renderProjects('all', key);
-        }, 600);
+        return;
       }
+
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      activeToolFilter = key;
+      /* Render first, then scroll — the old code scrolled to a grid that
+         only changed 600ms later. */
+      renderProjects(activeFilter, key);
+      document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
     });
 
     wrap.appendChild(btn);
@@ -364,10 +436,7 @@ function initAboutTools() {
 ══════════════════════════════════════════════ */
 function projectMatchesToolFilter(proj, toolFilter) {
   if (!toolFilter) return true;
-  if (proj.tools.includes(toolFilter)) return true;
-  /* Also match by category affinity */
-  const cats = TOOL_CATEGORIES[toolFilter] || [];
-  return cats.includes(proj.category);
+  return proj.tools.includes(toolFilter);
 }
 
 function getVisible(filter, toolFilter) {
@@ -378,9 +447,50 @@ function getVisible(filter, toolFilter) {
   });
 }
 
+/* Clear every filter and re-render. */
+function resetFilters() {
+  activeFilter     = 'all';
+  activeToolFilter = null;
+  $$('.filter-btn').forEach(b => {
+    const on = b.dataset.filter === 'all';
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
+  $$('.tool-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  renderProjects('all', null);
+}
+
+/* The tool filter used to run silently while the bar still read "All". */
+function renderActiveFilterChip(toolFilter) {
+  const slot = $('#workActiveFilter');
+  if (!slot) return;
+
+  slot.innerHTML = '';
+  slot.hidden = !toolFilter;
+  if (!toolFilter) return;
+
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = 'filter-chip';
+  chip.innerHTML = `
+    <span>${currentLang === 'tr' ? 'Araç' : 'Tool'}: <strong>${TOOL_NAMES[toolFilter] || toolFilter}</strong></span>
+    <span class="filter-chip__x" aria-hidden="true">✕</span>`;
+  chip.setAttribute('aria-label', currentLang === 'tr'
+    ? `${TOOL_NAMES[toolFilter] || toolFilter} filtresini kaldır`
+    : `Clear the ${TOOL_NAMES[toolFilter] || toolFilter} filter`);
+  chip.addEventListener('click', resetFilters);
+
+  slot.appendChild(chip);
+}
+
 function renderProjects(filter = 'all', toolFilter = null) {
   const grid = $('#workGrid');
   if (!grid) return;
+
+  renderActiveFilterChip(toolFilter);
 
   const visible = getVisible(filter, toolFilter);
   grid.innerHTML = '';
@@ -388,9 +498,16 @@ function renderProjects(filter = 'all', toolFilter = null) {
   if (!visible.length) {
     const empty = document.createElement('div');
     empty.className = 'work__empty';
-    empty.textContent = currentLang === 'tr'
-      ? 'Bu kategoride proje bulunamadı.'
-      : 'No projects found in this category.';
+    const msg = document.createElement('p');
+    msg.textContent = currentLang === 'tr'
+      ? 'Bu filtrelerle eşleşen proje yok.'
+      : 'No projects match these filters.';
+    const reset = document.createElement('button');
+    reset.type = 'button';
+    reset.className = 'work__empty-reset';
+    reset.textContent = currentLang === 'tr' ? 'Filtreleri temizle' : 'Clear filters';
+    reset.addEventListener('click', resetFilters);
+    empty.append(msg, reset);
     grid.appendChild(empty);
     return;
   }
@@ -403,7 +520,9 @@ function renderProjects(filter = 'all', toolFilter = null) {
     card.className = 'project-card';
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', `Open project: ${title}`);
+    card.setAttribute('aria-label', currentLang === 'tr'
+      ? `Projeyi aç: ${title}`
+      : `Open project: ${title}`);
     card.style.background = proj.gradient || '#111';
 
     /* Big decorative number */
@@ -523,11 +642,18 @@ function initFilters() {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
 
-    $$('.filter-btn').forEach(b => b.classList.remove('active'));
+    $$('.filter-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
     activeFilter     = btn.dataset.filter;
     activeToolFilter = null;
-    $$('.tool-btn').forEach(b => b.classList.remove('active'));
+    $$('.tool-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     renderProjects(activeFilter, null);
   });
 }
@@ -663,20 +789,27 @@ function openModal(proj) {
 
   infoWrap.innerHTML = `
     <p class="modal__category">${catLabel}</p>
-    <h3 class="modal__title">${title}</h3>
+    <h3 class="modal__title" id="modalTitle">${title}</h3>
     <p class="modal__desc">${desc}</p>
     <span class="modal__tools-label">${toolsLbl}</span>
     <div class="modal__tools">${toolsHTML}</div>
     <p class="modal__year"><strong>${yearLbl}:</strong> ${proj.year}</p>
   `;
 
-  overlay.classList.add('open');
+  overlay.hidden = false;
+  overlay.setAttribute('aria-hidden', 'false');
+  /* One frame after un-hiding, so the fade-in actually transitions. */
+  requestAnimationFrame(() => overlay.classList.add('open'));
   document.body.style.overflow = 'hidden';
+
+  /* Send focus into the dialog and remember where to put it back. */
+  lastFocused = document.activeElement;
+  $('#modalClose')?.focus();
 }
 
 function closeModal() {
   const overlay = $('#modalOverlay');
-  if (!overlay) return;
+  if (!overlay || overlay.hidden) return;
 
   /* Remove arrow key listener if set */
   if (overlay._keyHandler) {
@@ -685,10 +818,19 @@ function closeModal() {
   }
 
   overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 
   /* Pause any playing video */
   $('#modalImg video')?.pause();
+
+  /* Keep it out of the accessibility tree once the fade is done. */
+  setTimeout(() => {
+    if (!overlay.classList.contains('open')) overlay.hidden = true;
+  }, 300);
+
+  lastFocused?.focus?.();
+  lastFocused = null;
 }
 
 function initModal() {
@@ -698,7 +840,22 @@ function initModal() {
 
   closeBtn?.addEventListener('click', closeModal);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  document.addEventListener('keydown', e => {
+    if (overlay.hidden) return;
+    if (e.key === 'Escape') { closeModal(); return; }
+
+    /* Trap Tab inside the dialog — it used to walk off into the page behind. */
+    if (e.key !== 'Tab') return;
+    const focusable = $$('button, [href], input, textarea, video[controls], [tabindex]:not([tabindex="-1"])', overlay)
+      .filter(el => !el.disabled && el.offsetParent !== null);
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 }
 
 /* ══════════════════════════════════════════════
@@ -715,13 +872,28 @@ function initContactForm() {
     const email = $('#f-email').value.trim();
     const msg   = $('#f-msg').value.trim();
 
+    const fail = text => {
+      if (!successEl) return;
+      successEl.style.color = '#ff6b6b';
+      successEl.textContent = text;
+      /* The old code only auto-cleared messages from the request path,
+         so a validation error stayed on screen forever. */
+      clearTimeout(successEl._t);
+      successEl._t = setTimeout(() => { successEl.textContent = ''; }, 5000);
+    };
+
     if (!name || !email || !msg) {
-      if (successEl) {
-        successEl.style.color = '#ff6b6b';
-        successEl.textContent = currentLang === 'tr'
-          ? 'Lütfen tüm alanları doldurun.'
-          : 'Please fill in all fields.';
-      }
+      fail(currentLang === 'tr'
+        ? 'Lütfen tüm alanları doldurun.'
+        : 'Please fill in all fields.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      fail(currentLang === 'tr'
+        ? 'Geçerli bir e-posta adresi girin.'
+        : 'Please enter a valid email address.');
+      $('#f-email')?.focus();
       return;
     }
 
@@ -748,17 +920,15 @@ function initContactForm() {
         successEl.textContent = currentLang === 'tr'
           ? 'Mesajınız gönderildi! En kısa sürede geri döneceğim.'
           : 'Message sent! I\'ll get back to you shortly.';
+        clearTimeout(successEl._t);
+        successEl._t = setTimeout(() => { successEl.textContent = ''; }, 5000);
       }
     } catch (err) {
-      if (successEl) {
-        successEl.style.color = '#ff6b6b';
-        successEl.textContent = currentLang === 'tr'
-          ? 'Mesaj gönderilemedi, lütfen tekrar deneyin.'
-          : 'Message failed to send, please try again.';
-      }
+      fail(currentLang === 'tr'
+        ? 'Mesaj gönderilemedi, lütfen doğrudan e-posta ile yazın.'
+        : 'Message failed to send — please email me directly.');
     } finally {
       if (btn) btn.disabled = false;
-      setTimeout(() => { if (successEl) successEl.textContent = ''; }, 5000);
     }
   });
 }
@@ -776,14 +946,21 @@ function initLangToggle() {
    INIT
 ══════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  initNav();
-  initMobileMenu();
-  initReveal();
-  initCursor();
-  initAboutTools();
-  initFilters();
-  renderProjects();
-  initModal();
-  initContactForm();
-  initLangToggle();
+  /* One throwing init used to take the whole page down with it — the
+     project grid is built by JS, so a failure left an empty site. */
+  const boot = (name, fn) => {
+    try { fn(); } catch (err) { console.error(`init failed: ${name}`, err); }
+  };
+
+  boot('nav',         initNav);
+  boot('mobileMenu',  initMobileMenu);
+  boot('reveal',      initReveal);
+  boot('cursor',      initCursor);
+  boot('aboutTools',  initAboutTools);
+  boot('filters',     initFilters);
+  boot('modal',       initModal);
+  boot('contactForm', initContactForm);
+  boot('langToggle',  initLangToggle);
+  boot('stats',       syncStats);
+  boot('lang',        () => applyLang(preferredLang()));
 });

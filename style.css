@@ -68,6 +68,8 @@ button { font-family: inherit; cursor: pointer; }
   height: 44px;
 }
 
+.cursor.hidden { opacity: 0; }
+
 /* ── Reveal Animations ─────────────────────── */
 .reveal-up,
 .reveal-right {
@@ -709,6 +711,42 @@ button { font-family: inherit; cursor: pointer; }
 
 .tool-btn.active img { filter: brightness(1.1); }
 
+/* How many projects this tool actually opens */
+.tool-btn { position: relative; }
+
+.tool-btn__count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 50px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 19px;
+  text-align: center;
+}
+
+/* Shown as a skill, but it has no project behind it yet */
+.tool-btn--empty {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.tool-btn--empty:hover {
+  transform: none;
+  border-color: transparent;
+  background: var(--surface-2);
+}
+
+.tool-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* Profile card in about */
 .about__card {
   display: flex;
@@ -819,6 +857,35 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--bg);
   background: var(--accent);
   border-color: var(--accent);
+}
+
+/* Active tool filter — the grid used to filter silently while the bar read "All" */
+.work__activefilter {
+  margin: -24px 0 28px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-b);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 50px;
+  padding: 7px 14px;
+  transition: background 0.2s;
+}
+
+.filter-chip strong { font-weight: 600; }
+
+.filter-chip:hover { background: rgba(200,241,53,0.2); }
+
+.filter-chip__x {
+  font-size: 0.7rem;
+  color: var(--accent);
 }
 
 /* Project Grid */
@@ -1086,11 +1153,30 @@ button { font-family: inherit; cursor: pointer; }
 /* Empty state */
 .work__empty {
   grid-column: 1/-1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
   text-align: center;
   padding: 80px 0;
   color: var(--text-muted);
   font-size: 0.9rem;
 }
+
+.work__empty-reset {
+  font-family: var(--font-b);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: 50px;
+  padding: 9px 20px;
+  transition: transform 0.15s var(--ease), filter 0.2s;
+}
+
+.work__empty-reset:hover { transform: translateY(-1px); filter: brightness(1.08); }
 
 /* ══════════════════════════════════════════════
    CONTACT
@@ -1671,4 +1757,55 @@ button { font-family: inherit; cursor: pointer; }
 
 @media (max-width: 440px) {
   .hero__photo-deco { display: none; }
+}
+
+
+/* ══════════════════════════════════════════════
+   BASE BEHAVIOUR THAT WAS MISSING
+══════════════════════════════════════════════ */
+
+/* The modal overlay is now `hidden` while closed; without this the
+   display:flex on .modal-overlay would keep it on screen. */
+[hidden] { display: none !important; }
+
+/* Keyboard users could not see where they were on most controls. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Reduced motion ──────────────────────────
+   The site animated everything unconditionally: reveals, the custom
+   cursor loop, smooth scrolling, card entrances, the scroll indicator
+   and the tag pulse. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Reveal-on-scroll must not leave content invisible when the
+     transition it depends on is switched off. */
+  .reveal-up,
+  .reveal-right {
+    opacity: 1;
+    transform: none;
+  }
+
+  .project-card--enter { opacity: 1; animation: none; }
+  .project-card:hover { transform: none; }
+  .project-card__footer { transform: translateY(0); }
+  .project-card__inspect { opacity: 1; }
+  /* The custom cursor replaces the native one — hiding it without
+     restoring `cursor: auto` would leave no pointer at all. */
+  .cursor { display: none; }
+  body, a, button, [data-cursor] { cursor: auto; }
 }

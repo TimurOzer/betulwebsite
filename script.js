@@ -106,6 +106,40 @@ const PROJECTS = [
     desc: 'A motion graphics piece produced in After Effects — fluid transitions, kinetic typography, and layered visual storytelling. Every frame was animated with precision to create a dynamic, engaging experience.',
     descTR: 'After Effects\'te üretilen motion graphics çalışması — akıcı geçişler, kinetik tipografi ve katmanlı görsel anlatım. Her kare, dinamik ve ilgi çekici bir deneyim yaratmak için hassasiyetle animasyona alındı.',
     year: '2025'
+  },
+  {
+    id: 9,
+    title: 'Kinetic Name Animation',
+    titleTR: 'Kinetik İsim Animasyonu',
+    category: 'motion',
+    categoryLabel: 'Motion',
+    categoryLabelTR: 'Animasyon',
+    gradient: 'linear-gradient(135deg, #12001a 0%, #2a0033 100%)',
+    cover: null,
+    images: [],
+    thumbs: [],
+    video: encodeURI('PROJELER/after effects animasyon/name.mp4'),
+    tools: ['after effects'],
+    desc: 'A kinetic typography study built in After Effects — letterforms that assemble, breathe, and settle in rhythm. An exercise in timing, easing, and how much personality a name can carry in motion.',
+    descTR: 'After Effects\'te kurgulanan bir kinetik tipografi çalışması — harflerin ritimle birleşip yerine oturduğu bir animasyon. Zamanlama, yumuşatma ve bir ismin harekette ne kadar karakter taşıyabileceği üzerine bir deneme.',
+    year: '2025'
+  },
+  {
+    id: 10,
+    title: 'Walk Cycle Animation',
+    titleTR: 'Yürüyüş Döngüsü Animasyonu',
+    category: 'motion',
+    categoryLabel: 'Motion',
+    categoryLabelTR: 'Animasyon',
+    gradient: 'linear-gradient(135deg, #001a14 0%, #003026 100%)',
+    cover: null,
+    images: [],
+    thumbs: [],
+    video: encodeURI('PROJELER/after effects animasyon/walk.mp4'),
+    tools: ['after effects'],
+    desc: 'A character walk cycle animated in After Effects — looping motion driven by weight, balance, and follow-through. Each keyframe was tuned until the movement felt natural rather than mechanical.',
+    descTR: 'After Effects\'te animasyona alınan bir karakter yürüyüş döngüsü — ağırlık, denge ve takip hareketiyle kurulan kesintisiz bir döngü. Hareket mekanik değil doğal hissettirene kadar her kare ayarlandı.',
+    year: '2025'
   }
 ];
 

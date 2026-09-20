@@ -409,16 +409,42 @@ function renderProjects(filter = 'all', toolFilter = null) {
     /* Big decorative number */
     const bigNum = document.createElement('div');
     bigNum.className = 'project-card__bignum';
-    bigNum.textContent = String(proj.id).padStart(2, '0');
+    bigNum.textContent = String(idx + 1).padStart(2, '0');
 
-    /* Cover image or video badge */
+    /* Staggered entrance — cleared on animationend so :hover can move the card */
+    card.classList.add('project-card--enter');
+    card.style.setProperty('--d', `${Math.min(idx, 8) * 0.06}s`);
+    card.addEventListener('animationend', () => {
+      card.classList.remove('project-card--enter');
+      card.style.removeProperty('--d');
+    }, { once: true });
+
+    /* Cover image or silent video preview */
     if (proj.video && !proj.cover) {
-      /* Video-only project: show play badge */
+      /* Video-only project: the clip itself is the cover, it plays on hover */
+      const preview = document.createElement('video');
+      preview.className = 'project-card__preview';
+      preview.src = `${proj.video}#t=0.1`;
+      preview.muted = true;
+      preview.loop = true;
+      preview.playsInline = true;
+      preview.preload = 'metadata';
+      preview.setAttribute('aria-hidden', 'true');
+      preview.tabIndex = -1;
+      preview.onerror = () => { preview.remove(); card.classList.add('project-card--noposter'); };
+
+      const playPreview = () => { preview.play?.().catch(() => {}); };
+      const stopPreview = () => { preview.pause?.(); preview.currentTime = 0.1; };
+      card.addEventListener('mouseenter', playPreview);
+      card.addEventListener('mouseleave', stopPreview);
+      card.addEventListener('focus', playPreview);
+      card.addEventListener('blur', stopPreview);
+
       const badge = document.createElement('div');
       badge.className = 'project-card__video-badge';
-      badge.innerHTML = '<span>▶</span>';
-      card.appendChild(bigNum);
-      card.appendChild(badge);
+      badge.innerHTML = `<span>▶</span>${currentLang === 'tr' ? 'Video' : 'Showreel'}`;
+
+      card.append(bigNum, preview, badge);
     } else if (proj.cover) {
       const img = document.createElement('img');
       img.className = 'project-card__img';
@@ -462,7 +488,9 @@ function renderProjects(filter = 'all', toolFilter = null) {
     if (proj.images.length > 1) {
       const countBadge = document.createElement('div');
       countBadge.className = 'project-card__count';
-      countBadge.textContent = `${proj.images.length} screens`;
+      countBadge.textContent = currentLang === 'tr'
+        ? `${proj.images.length} görsel`
+        : `${proj.images.length} screens`;
       card.appendChild(countBadge);
     }
 
@@ -470,9 +498,9 @@ function renderProjects(filter = 'all', toolFilter = null) {
     const footer = document.createElement('div');
     footer.className = 'project-card__footer';
     footer.innerHTML = `
-      <span class="project-card__num">${String(idx + 1).padStart(2, '0')}</span>
+      <span class="project-card__num">${String(idx + 1).padStart(2, '0')} — ${proj.year}</span>
       <span class="project-card__title">${title}</span>
-      <span class="project-card__inspect">Inspect →</span>
+      <span class="project-card__inspect">${currentLang === 'tr' ? 'İncele' : 'View project'} →</span>
     `;
 
     card.append(overlay, catBadge, toolsWrap, footer);

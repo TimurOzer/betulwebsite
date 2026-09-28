@@ -140,6 +140,23 @@ const PROJECTS = [
     desc: 'A character walk cycle animated in After Effects — looping motion driven by weight, balance, and follow-through. Each keyframe was tuned until the movement felt natural rather than mechanical.',
     descTR: 'After Effects\'te animasyona alınan bir karakter yürüyüş döngüsü — ağırlık, denge ve takip hareketiyle kurulan kesintisiz bir döngü. Hareket mekanik değil doğal hissettirene kadar her kare ayarlandı.',
     year: '2025'
+  },
+  {
+    id: 11,
+    title: 'Flutter App — Interactive Prototype',
+    titleTR: 'Flutter Uygulaması — Etkileşimli Prototip',
+    category: 'ux',
+    categoryLabel: 'UI/UX',
+    categoryLabelTR: 'Arayüz Tasarımı',
+    gradient: 'linear-gradient(135deg, #001a1a 0%, #002e2e 100%)',
+    cover: null,
+    images: [],
+    thumbs: [],
+    video: encodeURI('PROJELER/flutter prototip/flutter-prototip.mp4'),
+    tools: ['flutter'],
+    desc: 'A working mobile app prototype built in Flutter, screen-recorded straight from the emulator. Beyond the static UI, this project covers real navigation flow, state changes, and interaction timing — the parts of a design that only come alive once they run.',
+    descTR: 'Flutter ile geliştirilen ve emülatörden ekran kaydı alınan çalışan bir mobil uygulama prototipi. Statik arayüz tasarımının ötesinde bu proje, gerçek navigasyon akışını, durum değişikliklerini ve etkileşim zamanlamasını kapsıyor — tasarımın ancak çalıştığında ortaya çıkan yönleri.',
+    year: '2026'
   }
 ];
 
@@ -161,6 +178,7 @@ const TOOL_NAMES = {
   'premiere':      'Adobe Premiere Pro',
   'after effects': 'Adobe After Effects',
   'figma':         'Figma',
+  'flutter':       'Flutter',
 };
 
 const ABOUT_TOOLS = ['illustrator', 'photoshop', 'adobe xd', 'premiere', 'after effects', 'figma'];

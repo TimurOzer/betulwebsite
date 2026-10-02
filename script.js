@@ -27,6 +27,7 @@ const PROJECTS = [
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #0e0022 0%, #1c0045 100%)',
     ...media('pigmentia', 17),
+    video: encodeURI('PROJELER/pigmentia/pigmentia-website.mp4'),
     tools: ['adobe xd'],
     desc: 'A complete website design for Pigmentia — a modern color exploration and palette generation platform. Built user-first: clean navigation, accessible contrast tools, and a cohesive design system that balances aesthetic beauty with frictionless interaction.',
     descTR: 'Pigmentia için kapsamlı web sitesi tasarımı — modern renk keşif ve palet üretim platformu. Kullanıcı odaklı: temiz navigasyon, erişilebilir kontrast araçları ve estetik güzelliği sorunsuz etkileşimle dengeleyen tutarlı bir tasarım sistemi.',
@@ -40,7 +41,7 @@ const PROJECTS = [
     categoryLabel: 'UI/UX',
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #080010 0%, #12001f 100%)',
-    ...media('nox', 11),
+    ...media('nox', 10),
     tools: ['figma'],
     desc: 'A dark, immersive mobile app design for Nox — a meal planning app brought to life through deep contrast, refined typography, and a meticulously layered UI. Every screen was designed to evoke atmosphere while maintaining clear usability.',
     descTR: 'Nox için koyu, sürükleyici bir mobil uygulama tasarımı — bir yemek planlama uygulaması; güçlü bir görsel kimlik, derin kontrast, rafine tipografi ve katmanlı bir arayüzle hayata geçirildi. Her ekran, net kullanılabilirliği korurken atmosfer yaratmak için tasarlandı.',
@@ -55,6 +56,7 @@ const PROJECTS = [
     categoryLabelTR: 'Arayüz Tasarımı',
     gradient: 'linear-gradient(135deg, #001a10 0%, #002818 100%)',
     ...media('catch', 6),
+    video: encodeURI('PROJELER/catch oyun/catch-gameplay.mp4'),
     tools: ['illustrator'],
     desc: 'Full UI design for Catch — a mobile game experience including main menu, HUD, level screens, and end states. The interface was crafted to feel intuitive and energetic, keeping players engaged with clear visual feedback at every moment.',
     descTR: 'Catch için tam UI tasarımı — ana menü, HUD, level ekranları ve bitiş ekranları dahil mobil oyun arayüzü. Arayüz, her an net görsel geri bildirimle oyuncuları bağlı tutan sezgisel ve enerjik bir his verecek şekilde tasarlandı.',
@@ -194,6 +196,7 @@ let activeFilter     = 'all';
 let activeToolFilter = null;
 let modalImgIndex    = 0;
 let modalImages      = [];
+let modalHasVideo    = false;
 let lastFocused      = null;
 
 /* ── Helpers ───────────────────────────────── */
@@ -683,12 +686,21 @@ function setModalImage(index) {
   modalImgIndex = ((index % modalImages.length) + modalImages.length) % modalImages.length;
 
   const mainImg = $('#modalMainImg');
+  const mainVid = $('#modalMainVid');
+  const isVideo = modalHasVideo && modalImgIndex === 0;
+  if (mainVid) {
+    mainVid.pause();
+    mainVid.hidden = !isVideo;
+  }
   if (mainImg) {
-    mainImg.style.opacity = '0';
-    setTimeout(() => {
-      mainImg.src = modalImages[modalImgIndex];
-      mainImg.style.opacity = '1';
-    }, 150);
+    mainImg.hidden = isVideo;
+    if (!isVideo) {
+      mainImg.style.opacity = '0';
+      setTimeout(() => {
+        mainImg.src = modalImages[modalImgIndex];
+        mainImg.style.opacity = '1';
+      }, 150);
+    }
   }
 
   /* Update counter */
@@ -715,10 +727,13 @@ function openModal(proj) {
 
   /* ── LEFT: Gallery or Video ── */
   imgWrap.innerHTML = '';
-  modalImages = proj.images || [];
+  const projImages = proj.images || [];
+  modalHasVideo = !!(proj.video && projImages.length);
+  /* Video + images: the clip is slide 0, followed by the images. */
+  modalImages = modalHasVideo ? [proj.video, ...projImages] : projImages;
   modalImgIndex = 0;
 
-  if (proj.video && modalImages.length === 0) {
+  if (proj.video && projImages.length === 0) {
     /* Video only */
     const vid = document.createElement('video');
     vid.src = proj.video;
@@ -736,10 +751,21 @@ function openModal(proj) {
     mainImg.id = 'modalMainImg';
     mainImg.className = 'modal__gallery-img';
     mainImg.src = modalImages[0];
+    mainImg.hidden = modalHasVideo;
     mainImg.alt = title;
     mainImg.decoding = 'async';
     mainImg.style.transition = 'opacity 0.15s ease';
     galleryWrap.appendChild(mainImg);
+
+    if (modalHasVideo) {
+      const mainVid = document.createElement('video');
+      mainVid.id = 'modalMainVid';
+      mainVid.className = 'modal__gallery-img modal__gallery-vid';
+      mainVid.src = proj.video;
+      mainVid.controls = true;
+      mainVid.preload = 'metadata';
+      galleryWrap.appendChild(mainVid);
+    }
 
     /* Prev / Next (only if multiple images) */
     if (modalImages.length > 1) {
@@ -765,11 +791,13 @@ function openModal(proj) {
       /* Thumbnail strip */
       const thumbs = document.createElement('div');
       thumbs.className = 'modal__thumbs';
-      const thumbSrcs = proj.thumbs && proj.thumbs.length ? proj.thumbs : modalImages;
+      const thumbSrcs = modalHasVideo
+        ? [proj.thumbs?.[0], ...(proj.thumbs || [])]
+        : (proj.thumbs && proj.thumbs.length ? proj.thumbs : modalImages);
       modalImages.forEach((src, i) => {
         const th = document.createElement('button');
-        th.className = 'modal__thumb' + (i === 0 ? ' active' : '');
-        th.setAttribute('aria-label', `View image ${i + 1}`);
+        th.className = 'modal__thumb' + (i === 0 ? ' active' : '') + (modalHasVideo && i === 0 ? ' modal__thumb--video' : '');
+        th.setAttribute('aria-label', modalHasVideo && i === 0 ? 'Watch video' : `View image ${i + 1}`);
         const thImg = document.createElement('img');
         thImg.src = thumbSrcs[i] || src;
         thImg.alt = '';

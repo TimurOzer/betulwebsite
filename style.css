@@ -1523,6 +1523,22 @@ button { font-family: inherit; cursor: pointer; }
   opacity: 1;
 }
 
+/* Video slide inside the gallery */
+.modal__gallery-vid { background: #000; }
+.modal__gallery-vid[hidden],
+.modal__gallery-img[hidden] { display: none; }
+.modal__thumb { position: relative; }
+.modal__thumb--video::after {
+  content: '▶';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 0.9rem;
+  background: rgba(0,0,0,0.45);
+}
+
 /* Video in modal */
 .modal__video {
   width: 100%;
